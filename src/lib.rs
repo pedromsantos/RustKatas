@@ -21,6 +21,16 @@ pub mod leap_year {
     }
 }
 
+pub mod fibonacci_sequence {
+    pub fn fibonacci(index: i16) -> i16 {
+        match index {
+            0 => 0,
+            1 => 1,
+            i => fibonacci(i -1) + fibonacci(i - 2)
+        }
+    }
+}
+
 #[cfg(test)]
 mod fizz_buzzer_tests {
     use super::fizz_buzz::*;
@@ -136,5 +146,24 @@ mod leap_year_tests {
     #[test_case(2020)]
     fn years_divisible_by_four_but_not_by_one_hundred_are_leap_years(year: i16) {
         assert_eq!(true, is_leap(year));
+    }
+}
+
+#[cfg(test)]
+mod fibonacci_tests {
+    use super::fibonacci_sequence::*;
+    use test_case::test_case;
+
+    #[test_case(0, 0)]
+    #[test_case(1, 1)]
+    #[test_case(2, 1)]
+    #[test_case(3, 2)]
+    #[test_case(4, 3)]
+    #[test_case(5, 5)]
+    #[test_case(6, 8)]
+    #[test_case(7, 13)]
+    #[test_case(12, 144)]
+    fn fibonacci_number_for_index(index: i16, fibonacci_number: i16) {
+        assert_eq!(fibonacci_number, fibonacci(index));
     }
 }
