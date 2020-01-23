@@ -163,7 +163,7 @@ mod fibonacci_tests {
     #[test_case(6, 8)]
     #[test_case(7, 13)]
     #[test_case(12, 144)]
-    fn fibonacci_number_for_index(index: i16, fibonacci_number: i16) {
+    fn fibonacci_number_is_the_sum_of_the_two_preceding_ones(index: i16, fibonacci_number: i16) {
         assert_eq!(fibonacci_number, fibonacci(index));
     }
 }
