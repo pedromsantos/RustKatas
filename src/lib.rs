@@ -81,10 +81,18 @@ pub mod tic_tac_toe {
         last_player: Player,
     }
 
+    impl Default for Game {
+        fn default() -> Self {
+            Game {
+                last_player: Player::O,
+            }
+        }
+    }
+
     impl Game {
         pub fn play(&mut self, player: Player) -> Result<(), InvalidMove> {
             if player == self.last_player {
-                return self.invalid_move();
+                return Game::invalid_move();
             }
 
             self.last_player = player;
@@ -92,16 +100,8 @@ pub mod tic_tac_toe {
             Ok(())
         }
 
-        fn invalid_move(&self) -> Result<(), InvalidMove> {
+        fn invalid_move() -> Result<(), InvalidMove> {
             Err(InvalidMove)
-        }
-    }
-
-    impl Default for Game {
-        fn default() -> Self {
-            Game {
-                last_player: Player::O,
-            }
         }
     }
 }
