@@ -1,7 +1,7 @@
 pub mod fizz_buzz {
     use std::borrow::Cow;
 
-    pub fn fizz_buzzer(number: i8) -> Cow<'static, str> {
+    pub fn fizz_buzzer(number: u8) -> Cow<'static, str> {
         match (number % 3, number % 5) {
             (0, 0) => "fizzbuzz".into(),
             (0, _) => "fizz".into(),
@@ -12,7 +12,7 @@ pub mod fizz_buzz {
 }
 
 pub mod leap_year {
-    pub fn is_leap(year: i16) -> bool {
+    pub fn is_leap(year: u16) -> bool {
         match (year % 400, year % 4, year % 100) {
             (0, _, _) => true,
             (_, 0, r) => r != 0,
@@ -22,7 +22,7 @@ pub mod leap_year {
 }
 
 pub mod fibonacci_sequence {
-    pub fn fibonacci(index: i16) -> i16 {
+    pub fn fibonacci(index: u16) -> u16 {
         match index {
             0 => 0,
             1 => 1,
@@ -32,7 +32,7 @@ pub mod fibonacci_sequence {
 }
 
 pub mod roman_numerals {
-    pub fn to_roman_numeral(number: i16) -> String {
+    pub fn to_roman_numeral(number: u16) -> String {
         let arabic_numbers_to_roman_numerals = &[
             (1000, "M"),
             (900, "CM"),
@@ -67,28 +67,28 @@ mod fizz_buzzer_tests {
     #[test_case(1, "1")]
     #[test_case(2, "2")]
     #[test_case(4, "4")]
-    fn convert_non_multiples_of_three_or_and_five_to_text(number: i8, expected: &'static str) {
+    fn convert_non_multiples_of_three_or_and_five_to_text(number: u8, expected: &'static str) {
         assert_eq!(expected, fizz_buzzer(number));
     }
 
     #[test_case(3)]
     #[test_case(6)]
     #[test_case(9)]
-    fn convert_multiples_of_three_to_fizz(number: i8) {
+    fn convert_multiples_of_three_to_fizz(number: u8) {
         assert_eq!("fizz", fizz_buzzer(number));
     }
 
     #[test_case(5)]
     #[test_case(10)]
     #[test_case(20)]
-    fn convert_multiples_of_five_to_buzz(number: i8) {
+    fn convert_multiples_of_five_to_buzz(number: u8) {
         assert_eq!("buzz", fizz_buzzer(number));
     }
 
     #[test_case(15)]
     #[test_case(30)]
     #[test_case(45)]
-    fn convert_multiples_of_three_and_five_to_fizzbuzz(number: i8) {
+    fn convert_multiples_of_three_and_five_to_fizzbuzz(number: u8) {
         assert_eq!("fizzbuzz", fizz_buzzer(number));
     }
 }
@@ -101,21 +101,21 @@ mod leap_year_tests {
     #[test_case(1970)]
     #[test_case(2030)]
     #[test_case(1990)]
-    fn years_not_divisible_by_four_are_not_leap_years(year: i16) {
+    fn years_not_divisible_by_four_are_not_leap_years(year: u16) {
         assert_eq!(false, is_leap(year));
     }
 
     #[test_case(1700)]
     #[test_case(1900)]
     #[test_case(2100)]
-    fn years_divisible_by_one_hundred_are_not_leap_years(year: i16) {
+    fn years_divisible_by_one_hundred_are_not_leap_years(year: u16) {
         assert_eq!(false, is_leap(year));
     }
 
     #[test_case(1600)]
     #[test_case(2000)]
     #[test_case(2400)]
-    fn years_divisible_by_four_hundred_are_leap_years(year: i16) {
+    fn years_divisible_by_four_hundred_are_leap_years(year: u16) {
         assert_eq!(true, is_leap(year));
     }
 
@@ -172,7 +172,7 @@ mod leap_year_tests {
     #[test_case(2012)]
     #[test_case(2016)]
     #[test_case(2020)]
-    fn years_divisible_by_four_but_not_by_one_hundred_are_leap_years(year: i16) {
+    fn years_divisible_by_four_but_not_by_one_hundred_are_leap_years(year: u16) {
         assert_eq!(true, is_leap(year));
     }
 }
@@ -191,7 +191,7 @@ mod fibonacci_tests {
     #[test_case(6, 8)]
     #[test_case(7, 13)]
     #[test_case(12, 144)]
-    fn fibonacci_number_is_the_sum_of_the_two_preceding_ones(index: i16, fibonacci_number: i16) {
+    fn fibonacci_number_is_the_sum_of_the_two_preceding_ones(index: u16, fibonacci_number: u16) {
         assert_eq!(fibonacci_number, fibonacci(index));
     }
 }
@@ -228,7 +228,7 @@ mod roman_numerals_tests {
     #[test_case(846, "DCCCXLVI")]
     #[test_case(1999, "MCMXCIX")]
     #[test_case(2008, "MMVIII")]
-    fn roman_numeral_of_number_is(number: i16, roman_numeral: &'static str) {
+    fn roman_numeral_of_number_is(number: u16, roman_numeral: &'static str) {
         assert_eq!(roman_numeral, to_roman_numeral(number));
     }
 }
