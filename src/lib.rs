@@ -32,8 +32,7 @@ pub mod fibonacci_sequence {
 }
 
 pub mod roman_numerals {
-    pub fn to_roman_numeral(number: u16) -> String {
-        let arabic_numbers_to_roman_numerals = &[
+    const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: &'static [(u16, &str)] = &[
             (1000, "M"),
             (900, "CM"),
             (500, "D"),
@@ -49,7 +48,8 @@ pub mod roman_numerals {
             (1, "I"),
         ];
 
-        for (arabic_number, roman_nuneral) in arabic_numbers_to_roman_numerals {
+    pub fn to_roman_numeral(number: u16) -> String {
+        for (arabic_number, roman_nuneral) in ARABIC_NUMBERS_TO_ROMAN_NUMERALS {
             if number >= *arabic_number {
                 return (*roman_nuneral).to_string() + &to_roman_numeral(number - arabic_number);
             }
