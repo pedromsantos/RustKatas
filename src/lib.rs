@@ -59,6 +59,53 @@ pub mod roman_numerals {
     }
 }
 
+pub mod tic_tac_toe {
+    use std::fmt;
+
+    #[derive(PartialEq)]
+    pub enum Player {
+        X,
+        O,
+    }
+
+    #[derive(Debug, PartialEq)]
+    pub struct InvalidMove;
+
+    impl fmt::Display for InvalidMove {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "Invalid move")
+        }
+    }
+
+    pub struct Game {
+        last_player: Player,
+    }
+
+    impl Game {
+        pub fn play(&mut self, player: Player) -> Result<(), InvalidMove> {
+            if player == self.last_player {
+                return self.invalid_move();
+            }
+
+            self.last_player = player;
+
+            Ok(())
+        }
+
+        fn invalid_move(&self) -> Result<(), InvalidMove> {
+            Err(InvalidMove)
+        }
+    }
+
+    impl Default for Game {
+        fn default() -> Self {
+            Game {
+                last_player: Player::O,
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod fizz_buzzer_tests {
     use super::fizz_buzz::*;
@@ -230,5 +277,30 @@ mod roman_numerals_tests {
     #[test_case(2008, "MMVIII")]
     fn roman_numeral_of_number_is(number: u16, roman_numeral: &'static str) {
         assert_eq!(roman_numeral, to_roman_numeral(number));
+    }
+}
+
+#[cfg(test)]
+mod tic_tac_toe_tests {
+    use super::tic_tac_toe::*;
+
+    #[test]
+    fn should_not_alow_player_o_to_play_first() {
+        let mut game = Game::default();
+
+        let result = game.play(Player::O);
+
+        assert_eq!(Err(InvalidMove), result);
+    }
+
+    #[test]
+    fn should_not_alow_player_x_to_play_twice() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X);
+        assert_eq!(Ok(()), result);
+
+        result = game.play(Player::X);
+        assert_eq!(Err(InvalidMove), result);
     }
 }
