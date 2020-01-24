@@ -51,11 +51,11 @@ pub mod roman_numerals {
 
         for (arabic_number, roman_nuneral) in arabic_numbers_to_roman_numerals {
             if number >= *arabic_number {
-                return roman_nuneral.to_string() + &to_roman_numeral(number - arabic_number);
+                return (*roman_nuneral).to_string() + &to_roman_numeral(number - arabic_number);
             }
         }
 
-        return "".to_string();
+        "".to_string()
     }
 }
 
