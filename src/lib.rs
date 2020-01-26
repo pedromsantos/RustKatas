@@ -100,6 +100,7 @@ pub mod tic_tac_toe {
     pub enum Row {
         Top,
         Center,
+        Bottom
     }
 
     #[derive(PartialEq, Eq, Hash, Clone, Copy)]
@@ -421,6 +422,46 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Rigth));
+        assert_eq!(Ok(Status::Win), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_center_row() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Center, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Center, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Center, Column::Rigth));
+        assert_eq!(Ok(Status::Win), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_bottom_row() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Bottom, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Bottom, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Bottom, Column::Rigth));
         assert_eq!(Ok(Status::Win), result);
     }
 }
