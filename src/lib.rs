@@ -72,6 +72,10 @@ pub mod tic_tac_toe {
         }
     }
 
+    fn invalid_move() -> Result<(), InvalidMove> {
+        Err(InvalidMove)
+    }
+    
     #[derive(PartialEq, Clone)]
     pub enum Player {
         X,
@@ -89,7 +93,7 @@ pub mod tic_tac_toe {
         Top
     }
 
-    pub struct Board {
+    struct Board {
         last_movements : HashMap<(Row, Column), Player>
     }
 
@@ -104,13 +108,13 @@ pub mod tic_tac_toe {
     impl Board {
         pub fn add(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
             if self.last_movements.contains_key(&movement) {
-                return Game::invalid_move(); 
+                return invalid_move(); 
              }
  
              self.last_movements.insert(movement, player);
 
              Ok(())
-        }
+        }        
     }
 
     pub struct Game {
@@ -130,16 +134,12 @@ pub mod tic_tac_toe {
     impl Game {
         pub fn play(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
             if player == self.last_player {
-                return Game::invalid_move();
+                return invalid_move();
             }
 
             self.last_player = player.clone();
 
             return self.board.add(player, movement);
-        }
-
-        fn invalid_move() -> Result<(), InvalidMove> {
-            Err(InvalidMove)
         }
     }
 }
