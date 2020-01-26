@@ -89,16 +89,40 @@ pub mod tic_tac_toe {
         Top
     }
 
+    pub struct Board {
+        last_movements : HashMap<(Row, Column), Player>
+    }
+
+    impl Default for Board {
+        fn default() -> Self {
+            Board {
+                last_movements: HashMap::new()
+            }
+        }
+    }
+
+    impl Board {
+        pub fn add(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
+            if self.last_movements.contains_key(&movement) {
+                return Game::invalid_move(); 
+             }
+ 
+             self.last_movements.insert(movement, player);
+
+             Ok(())
+        }
+    }
+
     pub struct Game {
         last_player: Player,
-        last_movements : HashMap<(Row, Column), Player>
+        board : Board
     }
 
     impl Default for Game {
         fn default() -> Self {
             Game {
                 last_player: Player::O,
-                last_movements: HashMap::new()
+                board: Board::default()
             }
         }
     }
@@ -109,14 +133,9 @@ pub mod tic_tac_toe {
                 return Game::invalid_move();
             }
 
-            if self.last_movements.contains_key(&movement) {
-               return Game::invalid_move(); 
-            }
-
             self.last_player = player.clone();
-            self.last_movements.insert(movement, player);
 
-            Ok(())
+            return self.board.add(player, movement);
         }
 
         fn invalid_move() -> Result<(), InvalidMove> {
