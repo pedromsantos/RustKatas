@@ -72,7 +72,7 @@ pub mod tic_tac_toe {
         }
     }
 
-    fn invalid_move() -> Result<Status, InvalidMove> {
+    fn invalid_move<T>() -> Result<T, InvalidMove> {
         Err(InvalidMove)
     }
 
@@ -122,26 +122,17 @@ pub mod tic_tac_toe {
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
-            let space = Space {
-                row: at.0,
-                column: at.1,
-            };
-
+        pub fn add(&mut self, player: Player, space: Space) -> Result<(), InvalidMove> {
             if self.last_movements.contains_key(&space) {
                 return invalid_move();
             }
 
             self.last_movements.insert(space, player);
 
-            if self.player_wins(player, space) {
-                return Ok(Status::Win);
-            }
-
-            Ok(Status::Playing)
+            Ok(())
         }
 
-        fn player_wins(&self, player: Player, space: Space) -> bool {
+        pub fn player_wins(&self, player: Player, space: Space) -> bool {
             if self.player_wins_in_row(player, space.row) || 
                 self.player_wins_in_column(player, space.column) {
                 return true;
@@ -183,7 +174,7 @@ pub mod tic_tac_toe {
         pub fn play(
             &mut self,
             player: Player,
-            movement: (Row, Column),
+            at: (Row, Column),
         ) -> Result<Status, InvalidMove> {
             if player == self.last_player {
                 return invalid_move();
@@ -191,7 +182,20 @@ pub mod tic_tac_toe {
 
             self.last_player = player;
 
-            self.board.add(player, movement)
+            let space = Space {
+                row: at.0,
+                column: at.1,
+            };
+
+            if self.board.add(player, space) == Err(InvalidMove) {
+                return Err(InvalidMove);
+            }
+
+            if self.board.player_wins(player, space) {
+                return Ok(Status::Win);
+            }
+
+            Ok(Status::Playing)
         }
     }
 }
