@@ -104,13 +104,13 @@ pub mod tic_tac_toe {
     }
 
     #[derive(PartialEq, Eq, Hash, Clone, Copy)]
-    struct Move {
+    struct Space {
         row: Row,
         column: Column,
     }
 
     struct Board {
-        last_movements: HashMap<Move, Player>,
+        last_movements: HashMap<Space, Player>,
     }
 
     impl Default for Board {
@@ -122,28 +122,28 @@ pub mod tic_tac_toe {
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, movement: (Row, Column)) -> Result<Status, InvalidMove> {
-            let moving = Move {
-                row: movement.0,
-                column: movement.1,
+        pub fn add(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
+            let space = Space {
+                row: at.0,
+                column: at.1,
             };
 
-            if self.last_movements.contains_key(&moving) {
+            if self.last_movements.contains_key(&space) {
                 return invalid_move();
             }
 
-            self.last_movements.insert(moving, player);
+            self.last_movements.insert(space, player);
 
-            if self.player_wins(player, movement) {
+            if self.player_wins(player, space) {
                 return Ok(Status::Win);
             }
 
             return Ok(Status::Playing);
         }
 
-        fn player_wins(&self, player: Player, movement: (Row, Column)) -> bool {
-            if self.player_wins_in_row(player, movement.0) || 
-                self.player_wins_in_column(player, movement.1) {
+        fn player_wins(&self, player: Player, space: Space) -> bool {
+            if self.player_wins_in_row(player, space.row) || 
+                self.player_wins_in_column(player, space.column) {
                 return true;
             }
 
