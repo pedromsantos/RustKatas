@@ -100,7 +100,7 @@ pub mod tic_tac_toe {
     pub enum Row {
         Top,
         Center,
-        Bottom
+        Bottom,
     }
 
     #[derive(PartialEq, Eq, Hash, Clone, Copy)]
@@ -133,8 +133,9 @@ pub mod tic_tac_toe {
         }
 
         pub fn player_wins(&self, player: Player, space: Space) -> bool {
-            if self.player_wins_in_row(player, space.row) || 
-                self.player_wins_in_column(player, space.column) {
+            if self.player_wins_in_row(player, space.row)
+                || self.player_wins_in_column(player, space.column)
+            {
                 return true;
             }
 
@@ -143,16 +144,18 @@ pub mod tic_tac_toe {
 
         fn player_wins_in_row(&self, player: Player, row: Row) -> bool {
             self.last_movements
-            .iter()
-            .filter(|&m| *m.1 == player && m.0.row == row)
-            .count() == 3
+                .iter()
+                .filter(|&m| *m.1 == player && m.0.row == row)
+                .count()
+                == 3
         }
 
         fn player_wins_in_column(&self, player: Player, column: Column) -> bool {
             self.last_movements
-            .iter()
-            .filter(|&m| *m.1 == player && m.0.column == column)
-            .count() == 3
+                .iter()
+                .filter(|&m| *m.1 == player && m.0.column == column)
+                .count()
+                == 3
         }
     }
 
@@ -171,11 +174,7 @@ pub mod tic_tac_toe {
     }
 
     impl Game {
-        pub fn play(
-            &mut self,
-            player: Player,
-            at: (Row, Column),
-        ) -> Result<Status, InvalidMove> {
+        pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
             if player == self.last_player {
                 return invalid_move();
             }
