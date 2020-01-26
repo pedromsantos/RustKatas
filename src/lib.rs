@@ -138,7 +138,7 @@ pub mod tic_tac_toe {
                 return Ok(Status::Win);
             }
 
-            return Ok(Status::Playing);
+            Ok(Status::Playing)
         }
 
         fn player_wins(&self, player: Player, space: Space) -> bool {
@@ -147,23 +147,21 @@ pub mod tic_tac_toe {
                 return true;
             }
 
-            return false;
+            false
         }
 
         fn player_wins_in_row(&self, player: Player, row: Row) -> bool {
-            return
-                self.last_movements
-                .iter()
-                .filter(|&m| *m.1 == player && m.0.row == row)
-                .count() == 3;
+            self.last_movements
+            .iter()
+            .filter(|&m| *m.1 == player && m.0.row == row)
+            .count() == 3
         }
 
         fn player_wins_in_column(&self, player: Player, column: Column) -> bool {
-            return
-                self.last_movements
-                .iter()
-                .filter(|&m| *m.1 == player && m.0.column == column)
-                .count() == 3;
+            self.last_movements
+            .iter()
+            .filter(|&m| *m.1 == player && m.0.column == column)
+            .count() == 3
         }
     }
 
@@ -191,9 +189,9 @@ pub mod tic_tac_toe {
                 return invalid_move();
             }
 
-            self.last_player = player.clone();
+            self.last_player = player;
 
-            return self.board.add(player, movement);
+            self.board.add(player, movement)
         }
     }
 }
