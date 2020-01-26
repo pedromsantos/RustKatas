@@ -61,6 +61,7 @@ pub mod roman_numerals {
 
 pub mod tic_tac_toe {
     use std::fmt;
+    use std::collections::HashMap;
 
     #[derive(Debug, PartialEq)]
     pub struct InvalidMove;
@@ -71,33 +72,33 @@ pub mod tic_tac_toe {
         }
     }
 
-    #[derive(PartialEq)]
+    #[derive(PartialEq, Clone)]
     pub enum Player {
         X,
         O,
     }
 
-    #[derive(PartialEq)]
+    #[derive(PartialEq, Eq, Hash)]
     pub enum Column {
         Left,
         Middle
     }
 
-    #[derive(PartialEq)]
+    #[derive(PartialEq, Eq, Hash)]
     pub enum Row {
         Top
     }
 
     pub struct Game {
         last_player: Player,
-        last_movement : Option<(Row, Column)>
+        last_movements : HashMap<(Row, Column), Player>
     }
 
     impl Default for Game {
         fn default() -> Self {
             Game {
                 last_player: Player::O,
-                last_movement: None
+                last_movements: HashMap::new()
             }
         }
     }
@@ -108,14 +109,12 @@ pub mod tic_tac_toe {
                 return Game::invalid_move();
             }
 
-            let m = Some(movement);
-
-            if m == self.last_movement {
+            if self.last_movements.contains_key(&movement) {
                return Game::invalid_move(); 
             }
 
-            self.last_movement = m;
-            self.last_player = player;
+            self.last_player = player.clone();
+            self.last_movements.insert(movement, player);
 
             Ok(())
         }
@@ -343,7 +342,8 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(()), result);
 
         result = game.play(Player::O, (Row::Top, Column::Middle));
-
+        assert_eq!(Ok(()), result);
+        
         result = game.play(Player::X, (Row::Top, Column::Left));
         assert_eq!(Err(InvalidMove), result);
     }
