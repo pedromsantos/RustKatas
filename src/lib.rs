@@ -175,8 +175,6 @@ pub mod tic_tac_toe {
                 return Err(InvalidMove);
             }
 
-            self.last_player = player;
-
             let space = Space {
                 row: at.0,
                 column: at.1,
@@ -189,6 +187,8 @@ pub mod tic_tac_toe {
             if self.board.player_wins(player, space) {
                 return Ok(Status::Win);
             }
+
+            self.last_player = player;
 
             Ok(Status::Playing)
         }
