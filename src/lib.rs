@@ -62,12 +62,6 @@ pub mod roman_numerals {
 pub mod tic_tac_toe {
     use std::fmt;
 
-    #[derive(PartialEq)]
-    pub enum Player {
-        X,
-        O,
-    }
-
     #[derive(Debug, PartialEq)]
     pub struct InvalidMove;
 
@@ -77,24 +71,50 @@ pub mod tic_tac_toe {
         }
     }
 
+    #[derive(PartialEq)]
+    pub enum Player {
+        X,
+        O,
+    }
+
+    #[derive(PartialEq)]
+    pub enum Column {
+        Left,
+        Middle
+    }
+
+    #[derive(PartialEq)]
+    pub enum Row {
+        Top
+    }
+
     pub struct Game {
         last_player: Player,
+        last_movement : Option<(Row, Column)>
     }
 
     impl Default for Game {
         fn default() -> Self {
             Game {
                 last_player: Player::O,
+                last_movement: None
             }
         }
     }
 
     impl Game {
-        pub fn play(&mut self, player: Player) -> Result<(), InvalidMove> {
+        pub fn play(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
             if player == self.last_player {
                 return Game::invalid_move();
             }
 
+            let m = Some(movement);
+
+            if m == self.last_movement {
+               return Game::invalid_move(); 
+            }
+
+            self.last_movement = m;
             self.last_player = player;
 
             Ok(())
@@ -288,7 +308,7 @@ mod tic_tac_toe_tests {
     fn should_not_alow_player_o_to_play_first() {
         let mut game = Game::default();
 
-        let result = game.play(Player::O);
+        let result = game.play(Player::O, (Row::Top, Column::Left));
 
         assert_eq!(Err(InvalidMove), result);
     }
@@ -297,10 +317,34 @@ mod tic_tac_toe_tests {
     fn should_not_alow_player_x_to_play_twice() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X);
+        let mut result = game.play(Player::X, (Row::Top, Column::Left));
         assert_eq!(Ok(()), result);
 
-        result = game.play(Player::X);
+        result = game.play(Player::X, (Row::Top, Column::Middle));
+        assert_eq!(Err(InvalidMove), result);
+    }
+
+    #[test]
+    fn should_not_alow_player_to_play_twice_in_same_position() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Left));
+        assert_eq!(Ok(()), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Left));
+        assert_eq!(Err(InvalidMove), result);
+    }
+
+    #[test]
+    fn should_not_alow_player_to_play_in_same_position_once_taken() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Left));
+        assert_eq!(Ok(()), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Middle));
+
+        result = game.play(Player::X, (Row::Top, Column::Left));
         assert_eq!(Err(InvalidMove), result);
     }
 }
