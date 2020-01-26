@@ -128,9 +128,9 @@ pub mod tic_tac_toe {
             Ok(())
         }
 
-        pub fn player_wins(&self, player: Player, space: Space) -> bool {
-            if self.player_wins_in_row(player, space.row)
-                || self.player_wins_in_column(player, space.column)
+        pub fn is_winner(&self, player: Player, space: Space) -> bool {
+            if self.is_winner_in_row(player, space.row)
+                || self.is_winner_in_column(player, space.column)
             {
                 return true;
             }
@@ -138,7 +138,7 @@ pub mod tic_tac_toe {
             false
         }
 
-        fn player_wins_in_row(&self, player: Player, row: Row) -> bool {
+        fn is_winner_in_row(&self, player: Player, row: Row) -> bool {
             self.last_movements
                 .iter()
                 .filter(|&m| *m.1 == player && m.0.row == row)
@@ -146,7 +146,7 @@ pub mod tic_tac_toe {
                 == 3
         }
 
-        fn player_wins_in_column(&self, player: Player, column: Column) -> bool {
+        fn is_winner_in_column(&self, player: Player, column: Column) -> bool {
             self.last_movements
                 .iter()
                 .filter(|&m| *m.1 == player && m.0.column == column)
@@ -175,16 +175,13 @@ pub mod tic_tac_toe {
                 return Err(InvalidMove);
             }
 
-            let space = Space {
-                row: at.0,
-                column: at.1,
-            };
+            let space = Space { row: at.0, column: at.1 };
 
             if self.board.add(player, space) == Err(InvalidMove) {
                 return Err(InvalidMove);
             }
 
-            if self.board.player_wins(player, space) {
+            if self.board.is_winner(player, space) {
                 return Ok(Status::Win);
             }
 
