@@ -134,23 +134,23 @@ pub mod tic_tac_toe {
 
             self.last_movements.insert(moving, player);
 
-            if self.player_wins(movement, player) {
+            if self.player_wins(player, movement) {
                 return Ok(Status::Win);
             }
 
             return Ok(Status::Playing);
         }
 
-        fn player_wins(&self, movement: (Row, Column), player: Player) -> bool {
-            if self.player_wins_in_row(movement.0, player) || 
-                self.player_wins_in_column(movement.1, player) {
+        fn player_wins(&self, player: Player, movement: (Row, Column)) -> bool {
+            if self.player_wins_in_row(player, movement.0) || 
+                self.player_wins_in_column(player, movement.1) {
                 return true;
             }
 
             return false;
         }
 
-        fn player_wins_in_row(&self, row: Row, player: Player) -> bool {
+        fn player_wins_in_row(&self, player: Player, row: Row) -> bool {
             return
                 self.last_movements
                 .iter()
@@ -158,7 +158,7 @@ pub mod tic_tac_toe {
                 .count() == 3;
         }
 
-        fn player_wins_in_column(&self, column: Column, player: Player) -> bool {
+        fn player_wins_in_column(&self, player: Player, column: Column) -> bool {
             return
                 self.last_movements
                 .iter()
