@@ -60,8 +60,8 @@ pub mod roman_numerals {
 }
 
 pub mod tic_tac_toe {
-    use std::fmt;
     use std::collections::HashMap;
+    use std::fmt;
 
     #[derive(Debug, PartialEq)]
     pub struct InvalidMove;
@@ -72,67 +72,104 @@ pub mod tic_tac_toe {
         }
     }
 
-    fn invalid_move() -> Result<(), InvalidMove> {
+    fn invalid_move() -> Result<Status, InvalidMove> {
         Err(InvalidMove)
     }
-    
-    #[derive(PartialEq, Clone)]
+
+    #[derive(PartialEq, Debug)]
+    pub enum Status {
+        Playing,
+        Win,
+        Draw,
+    }
+
+    #[derive(PartialEq, Clone, Copy)]
     pub enum Player {
         X,
         O,
     }
 
-    #[derive(PartialEq, Eq, Hash)]
+    #[derive(PartialEq, Eq, Hash, Clone, Copy)]
     pub enum Column {
         Left,
-        Middle
+        Middle,
+        Rigth,
     }
 
-    #[derive(PartialEq, Eq, Hash)]
+    #[derive(PartialEq, Eq, Hash, Clone, Copy)]
     pub enum Row {
-        Top
+        Top,
+        Center,
+    }
+
+    #[derive(PartialEq, Eq, Hash, Clone, Copy)]
+    struct Move {
+        row: Row,
+        column: Column,
     }
 
     struct Board {
-        last_movements : HashMap<(Row, Column), Player>
+        last_movements: HashMap<Move, Player>,
     }
 
     impl Default for Board {
         fn default() -> Self {
             Board {
-                last_movements: HashMap::new()
+                last_movements: HashMap::new(),
             }
         }
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
-            if self.last_movements.contains_key(&movement) {
-                return invalid_move(); 
-             }
- 
-             self.last_movements.insert(movement, player);
+        pub fn add(&mut self, player: Player, movement: (Row, Column)) -> Result<Status, InvalidMove> {
+            let moving = Move {
+                row: movement.0,
+                column: movement.1,
+            };
 
-             Ok(())
-        }        
+            if self.last_movements.contains_key(&moving) {
+                return invalid_move();
+            }
+
+            self.last_movements.insert(moving, player);
+
+            if self.player_wins_in_row(movement.0, player) {
+                return Ok(Status::Win);
+            }
+
+            return Ok(Status::Playing);
+        }
+
+        fn player_wins_in_row(&self, row: Row, player: Player) -> bool {
+            return
+                self.last_movements
+                .iter()
+                .filter(|m| *m.1 == player)
+                .filter(|m| m.0.row == row)
+                .count() == 3;
+        }
     }
 
     pub struct Game {
         last_player: Player,
-        board : Board
+        board: Board,
     }
 
     impl Default for Game {
         fn default() -> Self {
             Game {
                 last_player: Player::O,
-                board: Board::default()
+                board: Board::default(),
             }
         }
     }
 
     impl Game {
-        pub fn play(&mut self, player: Player, movement: (Row, Column)) -> Result<(), InvalidMove> {
+        pub fn play(
+            &mut self,
+            player: Player,
+            movement: (Row, Column),
+        ) -> Result<Status, InvalidMove> {
             if player == self.last_player {
                 return invalid_move();
             }
@@ -336,7 +373,7 @@ mod tic_tac_toe_tests {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, (Row::Top, Column::Left));
-        assert_eq!(Ok(()), result);
+        assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Middle));
         assert_eq!(Err(InvalidMove), result);
@@ -347,7 +384,7 @@ mod tic_tac_toe_tests {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, (Row::Top, Column::Left));
-        assert_eq!(Ok(()), result);
+        assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::O, (Row::Top, Column::Left));
         assert_eq!(Err(InvalidMove), result);
@@ -358,12 +395,32 @@ mod tic_tac_toe_tests {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, (Row::Top, Column::Left));
-        assert_eq!(Ok(()), result);
+        assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::O, (Row::Top, Column::Middle));
-        assert_eq!(Ok(()), result);
-        
+        assert_eq!(Ok(Status::Playing), result);
+
         result = game.play(Player::X, (Row::Top, Column::Left));
         assert_eq!(Err(InvalidMove), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_top_row() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Top, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Top, Column::Rigth));
+        assert_eq!(Ok(Status::Win), result);
     }
 }
