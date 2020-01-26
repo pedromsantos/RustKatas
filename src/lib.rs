@@ -171,13 +171,12 @@ pub mod tic_tac_toe {
 
     impl Game {
         pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
-            if player == self.last_player {
-                return Err(InvalidMove);
-            }
+            let space = Space {
+                row: at.0,
+                column: at.1,
+            };
 
-            let space = Space { row: at.0, column: at.1 };
-
-            if self.board.add(player, space) == Err(InvalidMove) {
+            if player == self.last_player || self.board.add(player, space) == Err(InvalidMove) {
                 return Err(InvalidMove);
             }
 
