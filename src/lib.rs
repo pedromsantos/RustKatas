@@ -138,6 +138,10 @@ pub mod tic_tac_toe {
                 return Ok(Status::Win);
             }
 
+            if self.player_wins_in_column(movement.1, player) {
+                return Ok(Status::Win);
+            }
+
             return Ok(Status::Playing);
         }
 
@@ -145,8 +149,15 @@ pub mod tic_tac_toe {
             return
                 self.last_movements
                 .iter()
-                .filter(|m| *m.1 == player)
-                .filter(|m| m.0.row == row)
+                .filter(|&m| *m.1 == player && m.0.row == row)
+                .count() == 3;
+        }
+
+        fn player_wins_in_column(&self, column: Column, player: Player) -> bool {
+            return
+                self.last_movements
+                .iter()
+                .filter(|&m| *m.1 == player && m.0.column == column)
                 .count() == 3;
         }
     }
@@ -459,6 +470,66 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::O, (Row::Top, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Bottom, Column::Rigth));
+        assert_eq!(Ok(Status::Win), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_left_column() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Rigth));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Center, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Bottom, Column::Left));
+        assert_eq!(Ok(Status::Win), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_middle_column() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Rigth));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Center, Column::Middle));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Top, Column::Rigth));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Bottom, Column::Middle));
+        assert_eq!(Ok(Status::Win), result);
+    }
+
+    #[test]
+    fn should_declare_winner_if_it_has_three_moves_on_right_column() {
+        let mut game = Game::default();
+
+        let mut result = game.play(Player::X, (Row::Top, Column::Rigth));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Left));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::X, (Row::Center, Column::Rigth));
+        assert_eq!(Ok(Status::Playing), result);
+
+        result = game.play(Player::O, (Row::Center, Column::Middle));
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Bottom, Column::Rigth));
