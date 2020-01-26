@@ -72,10 +72,6 @@ pub mod tic_tac_toe {
         }
     }
 
-    fn invalid_move<T>() -> Result<T, InvalidMove> {
-        Err(InvalidMove)
-    }
-
     #[derive(PartialEq, Debug)]
     pub enum Status {
         Playing,
@@ -124,7 +120,7 @@ pub mod tic_tac_toe {
     impl Board {
         pub fn add(&mut self, player: Player, space: Space) -> Result<(), InvalidMove> {
             if self.last_movements.contains_key(&space) {
-                return invalid_move();
+                return Err(InvalidMove);
             }
 
             self.last_movements.insert(space, player);
@@ -176,7 +172,7 @@ pub mod tic_tac_toe {
     impl Game {
         pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
             if player == self.last_player {
-                return invalid_move();
+                return Err(InvalidMove);
             }
 
             self.last_player = player;
