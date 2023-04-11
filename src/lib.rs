@@ -1,12 +1,10 @@
 pub mod fizz_buzz {
-    use std::borrow::Cow;
-
-    pub fn fizz_buzzer(number: u8) -> Cow<'static, str> {
+    pub fn fizz_buzzer(number: u8) -> String {
         match (number % 3, number % 5) {
-            (0, 0) => "fizzbuzz".into(),
-            (0, _) => "fizz".into(),
-            (_, 0) => "buzz".into(),
-            (_, _) => number.to_string().into(),
+            (0, 0) => String::from("fizzbuzz"),
+            (0, _) => String::from("fizz"),
+            (_, 0) => String::from("buzz"),
+            (_, _) => number.to_string()
         }
     }
 }
