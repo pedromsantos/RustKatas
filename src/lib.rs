@@ -98,13 +98,13 @@ pub mod tic_tac_toe {
     }
 
     #[derive(PartialEq, Eq, Hash, Clone, Copy)]
-    struct Space {
+    struct Square {
         row: Row,
         column: Column,
     }
 
     struct Board {
-        last_movements: HashMap<Space, Player>,
+        last_movements: HashMap<Square, Player>,
     }
 
     impl Default for Board {
@@ -116,19 +116,19 @@ pub mod tic_tac_toe {
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, space: Space) -> Result<(), InvalidMove> {
-            if self.last_movements.contains_key(&space) {
+        pub fn add(&mut self, player: Player, square: Square) -> Result<(), InvalidMove> {
+            if self.last_movements.contains_key(&square) {
                 return Err(InvalidMove);
             }
 
-            self.last_movements.insert(space, player);
+            self.last_movements.insert(square, player);
 
             Ok(())
         }
 
-        pub fn is_winner(&self, player: Player, space: Space) -> bool {
-            if self.is_winner_in_row(player, space.row)
-                || self.is_winner_in_column(player, space.column)
+        pub fn is_same_player_in_square_row_or_colum(&self, player: Player, square: Square) -> bool {
+            if self.is_same_player_in_row(player, square.row)
+                || self.is_same_player_in_column(player, square.column)
             {
                 return true;
             }
@@ -136,7 +136,7 @@ pub mod tic_tac_toe {
             false
         }
 
-        fn is_winner_in_row(&self, player: Player, row: Row) -> bool {
+        fn is_same_player_in_row(&self, player: Player, row: Row) -> bool {
             self.last_movements
                 .iter()
                 .filter(|&m| *m.1 == player && m.0.row == row)
@@ -144,7 +144,7 @@ pub mod tic_tac_toe {
                 == 3
         }
 
-        fn is_winner_in_column(&self, player: Player, column: Column) -> bool {
+        fn is_same_player_in_column(&self, player: Player, column: Column) -> bool {
             self.last_movements
                 .iter()
                 .filter(|&m| *m.1 == player && m.0.column == column)
@@ -169,16 +169,16 @@ pub mod tic_tac_toe {
 
     impl Game {
         pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
-            let space = Space {
+            let square = Square {
                 row: at.0,
                 column: at.1,
             };
 
-            if player == self.last_player || self.board.add(player, space) == Err(InvalidMove) {
+            if player == self.last_player || self.board.add(player, square) == Err(InvalidMove) {
                 return Err(InvalidMove);
             }
 
-            if self.board.is_winner(player, space) {
+            if self.board.is_same_player_in_square_row_or_colum(player, square) {
                 return Ok(Status::Win);
             }
 
