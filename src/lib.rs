@@ -59,7 +59,6 @@ pub mod roman_numerals {
 
 pub mod tic_tac_toe {
     use std::collections::HashMap;
-    use std::fmt;
 
     #[derive(PartialEq, Debug)]
     pub enum Status {
