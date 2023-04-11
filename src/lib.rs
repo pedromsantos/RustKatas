@@ -61,15 +61,6 @@ pub mod tic_tac_toe {
     use std::collections::HashMap;
     use std::fmt;
 
-    #[derive(Debug, PartialEq)]
-    pub struct InvalidMove;
-
-    impl fmt::Display for InvalidMove {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "Invalid move")
-        }
-    }
-
     #[derive(PartialEq, Debug)]
     pub enum Status {
         Playing,
@@ -116,9 +107,9 @@ pub mod tic_tac_toe {
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, square: Square) -> Result<(), InvalidMove> {
+        pub fn add(&mut self, player: Player, square: Square) -> Result<(), &'static str> {
             if self.last_movements.contains_key(&square) {
-                return Err(InvalidMove);
+                return Err("Invalid move");
             }
 
             self.last_movements.insert(square, player);
@@ -168,15 +159,17 @@ pub mod tic_tac_toe {
     }
 
     impl Game {
-        pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, InvalidMove> {
+        pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, &'static str> {
             let square = Square {
                 row: at.0,
                 column: at.1,
             };
 
-            if player == self.last_player || self.board.add(player, square) == Err(InvalidMove) {
-                return Err(InvalidMove);
+            if player == self.last_player {
+                return Err("Invalid player");
             }
+
+            self.board.add(player, square)?;
 
             if self.board.is_same_player_in_square_row_or_colum(player, square) {
                 return Ok(Status::Win);
@@ -373,7 +366,7 @@ mod tic_tac_toe_tests {
 
         let result = game.play(Player::O, (Row::Top, Column::Left));
 
-        assert_eq!(Err(InvalidMove), result);
+        assert_eq!(Err("Invalid player"), result);
     }
 
     #[test]
@@ -384,7 +377,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Middle));
-        assert_eq!(Err(InvalidMove), result);
+        assert_eq!(Err("Invalid player"), result);
     }
 
     #[test]
@@ -395,7 +388,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::O, (Row::Top, Column::Left));
-        assert_eq!(Err(InvalidMove), result);
+        assert_eq!(Err("Invalid move"), result);
     }
 
     #[test]
@@ -409,7 +402,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Left));
-        assert_eq!(Err(InvalidMove), result);
+        assert_eq!(Err("Invalid move"), result);
     }
 
     #[test]
