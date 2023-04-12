@@ -30,7 +30,7 @@ pub mod fibonacci_sequence {
 }
 
 pub mod roman_numerals {
-    const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: [(u16, &str); 13] = [
+    const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: [(u16, &'static str); 13] = [
         (1000, "M"),
         (900, "CM"),
         (500, "D"),
@@ -106,9 +106,9 @@ pub mod tic_tac_toe {
     }
 
     impl Board {
-        pub fn add(&mut self, player: Player, square: Square) -> Result<(), &'static str> {
+        pub fn add(&mut self, player: Player, square: Square) -> Result<(), String> {
             if self.last_movements.contains_key(&square) {
-                return Err("Invalid move");
+                return Err(String::from("Invalid move"));
             }
 
             self.last_movements.insert(square, player);
@@ -158,14 +158,14 @@ pub mod tic_tac_toe {
     }
 
     impl Game {
-        pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, &'static str> {
+        pub fn play(&mut self, player: Player, at: (Row, Column)) -> Result<Status, String> {
             let square = Square {
                 row: at.0,
                 column: at.1,
             };
 
             if player == self.last_player {
-                return Err("Invalid player");
+                return Err(String::from("Invalid player"));
             }
 
             self.board.add(player, square)?;
@@ -365,7 +365,7 @@ mod tic_tac_toe_tests {
 
         let result = game.play(Player::O, (Row::Top, Column::Left));
 
-        assert_eq!(Err("Invalid player"), result);
+        assert_eq!(Err(String::from("Invalid player")), result);
     }
 
     #[test]
@@ -376,7 +376,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Middle));
-        assert_eq!(Err("Invalid player"), result);
+        assert_eq!(Err(String::from("Invalid player")), result);
     }
 
     #[test]
@@ -387,7 +387,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::O, (Row::Top, Column::Left));
-        assert_eq!(Err("Invalid move"), result);
+        assert_eq!(Err(String::from("Invalid move")), result);
     }
 
     #[test]
@@ -401,7 +401,7 @@ mod tic_tac_toe_tests {
         assert_eq!(Ok(Status::Playing), result);
 
         result = game.play(Player::X, (Row::Top, Column::Left));
-        assert_eq!(Err("Invalid move"), result);
+        assert_eq!(Err(String::from("Invalid move")), result);
     }
 
     #[test]
