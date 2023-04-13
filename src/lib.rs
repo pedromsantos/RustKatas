@@ -93,6 +93,12 @@ pub mod tic_tac_toe {
         column: Column,
     }
 
+    impl Square {
+        pub fn new(row: Row, column: Column) -> Self {
+            return Square { row: row, column };
+        }
+    }
+
     struct Board {
         last_movements: HashMap<Square, Player>,
     }
@@ -102,12 +108,6 @@ pub mod tic_tac_toe {
             Board {
                 last_movements: HashMap::with_capacity(9),
             }
-        }
-    }
-
-    impl Square {
-        pub fn new(row: Row, column: Column) -> Self {
-            return Square { row: row, column };
         }
     }
 
