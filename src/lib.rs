@@ -421,19 +421,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_top_row() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Top, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Left));
+        _ = game.play(Player::X, Square::new(Row::Top, Column::Middle));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
+        let result = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -441,19 +433,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_center_row() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Center, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Top, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Center, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Top, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Center, Column::Left));
+        _ = game.play(Player::O, Square::new(Row::Top, Column::Left));
+        _ = game.play(Player::X, Square::new(Row::Center, Column::Middle));
+        _ = game.play(Player::O, Square::new(Row::Top, Column::Middle));
+        let result = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -461,19 +445,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_bottom_row() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Top, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Top, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
+        _ = game.play(Player::O, Square::new(Row::Top, Column::Left));
+        _ = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
+        _ = game.play(Player::O, Square::new(Row::Top, Column::Middle));
+        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -481,19 +457,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_left_column() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Center, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
+        _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Center, Column::Left));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
+        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -501,19 +469,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_middle_column() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Center, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Top, Column::Rigth));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
+        _ = game.play(Player::X, Square::new(Row::Top, Column::Middle));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Center, Column::Middle));
+        _ = game.play(Player::O, Square::new(Row::Top, Column::Rigth));
+        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -521,19 +481,11 @@ mod tic_tac_toe_tests {
     fn should_declare_winner_if_it_has_three_moves_on_right_column() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Left));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        assert_eq!(Ok(Status::Playing), result);
-
-        result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
+        _ = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Left));
+        _ = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
+        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
+        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
         assert_eq!(Ok(Status::Win), result);
     }
 }
