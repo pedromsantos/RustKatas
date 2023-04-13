@@ -95,7 +95,7 @@ pub mod tic_tac_toe {
 
     impl Square {
         pub fn new(row: Row, column: Column) -> Self {
-            return Square { row: row, column };
+            return Square { row, column };
         }
     }
 
