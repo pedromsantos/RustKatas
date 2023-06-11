@@ -100,54 +100,49 @@ pub mod tic_tac_toe {
     }
 
     struct Board {
-        last_movements: HashMap<Square, Player>,
+        movements: HashMap<Square, Player>,
     }
 
     impl Default for Board {
         fn default() -> Self {
             Board {
-                last_movements: HashMap::with_capacity(9),
+                movements: HashMap::with_capacity(9),
             }
         }
     }
 
     impl Board {
         pub fn add(&mut self, player: Player, square: Square) -> Result<(), String> {
-            if self.last_movements.contains_key(&square) {
+            if self.movements.contains_key(&square) {
                 return Err(String::from("Invalid move"));
             }
 
-            self.last_movements.insert(square, player);
+            self.movements.insert(square, player);
 
             Ok(())
         }
 
-        pub fn is_same_player_in_square_row_or_colum(
+        pub fn is_same_player_in_square_row_or_column(
             &self,
             player: Player,
             square: Square,
         ) -> bool {
-            if self.is_same_player_in_row(player, square.row)
-                || self.is_same_player_in_column(player, square.column)
-            {
-                return true;
-            }
-
-            false
+            return self.is_same_player_in_row(&player, square.row)
+                || self.is_same_player_in_column(&player, square.column);
         }
 
-        fn is_same_player_in_row(&self, player: Player, row: Row) -> bool {
-            self.last_movements
+        fn is_same_player_in_row(&self, player: &Player, row: Row) -> bool {
+            self.movements
                 .iter()
-                .filter(|&m| *m.1 == player && m.0.row == row)
+                .filter(|m| m.1 == player && m.0.row == row)
                 .count()
                 == 3
         }
 
-        fn is_same_player_in_column(&self, player: Player, column: Column) -> bool {
-            self.last_movements
+        fn is_same_player_in_column(&self, player: &Player, column: Column) -> bool {
+            self.movements
                 .iter()
-                .filter(|&m| *m.1 == player && m.0.column == column)
+                .filter(|m| m.1 == player && m.0.column == column)
                 .count()
                 == 3
         }
@@ -177,7 +172,7 @@ pub mod tic_tac_toe {
 
             if self
                 .board
-                .is_same_player_in_square_row_or_colum(player, square)
+                .is_same_player_in_square_row_or_column(player, square)
             {
                 return Ok(Status::Win);
             }
@@ -198,7 +193,10 @@ mod fizz_buzzer_tests {
     #[test_case(1, "1")]
     #[test_case(2, "2")]
     #[test_case(4, "4")]
-    fn convert_non_multiples_of_three_or_and_five_to_text(number: u8, expected: &'static str) {
+    fn convert_non_multiples_of_three_or_and_five_to_textual_representation(
+        number: u8,
+        expected: &'static str,
+    ) {
         assert_eq!(expected, fizz_buzzer(number));
     }
 
@@ -368,12 +366,12 @@ mod roman_numerals_tests {
 }
 
 #[cfg(test)]
-mod tic_tac_toe_tests {
+mod tic_tac_toe_should {
     use super::tic_tac_toe::*;
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn should_not_alow_player_o_to_play_first() {
+    fn not_alow_player_o_to_play_first() {
         let mut game = Game::default();
 
         let result = game.play(Player::O, Square::new(Row::Top, Column::Left));
@@ -382,7 +380,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_not_alow_player_x_to_play_twice() {
+    fn not_alow_player_x_to_play_twice() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -393,7 +391,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_not_alow_player_to_play_twice_in_same_position() {
+    fn not_alow_player_to_play_twice_in_same_position() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -404,7 +402,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_not_alow_player_to_play_in_same_position_once_taken() {
+    fn not_alow_player_to_play_in_same_position_once_taken() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -418,7 +416,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_top_row() {
+    fn declare_winner_if_it_has_three_moves_on_top_row() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -430,7 +428,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_center_row() {
+    fn declare_winner_if_it_has_three_moves_on_center_row() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Center, Column::Left));
@@ -442,7 +440,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_bottom_row() {
+    fn declare_winner_if_it_has_three_moves_on_bottom_row() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
@@ -454,7 +452,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_left_column() {
+    fn declare_winner_if_it_has_three_moves_on_left_column() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -466,7 +464,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_middle_column() {
+    fn declare_winner_if_it_has_three_moves_on_middle_column() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Top, Column::Middle));
@@ -478,7 +476,7 @@ mod tic_tac_toe_tests {
     }
 
     #[test]
-    fn should_declare_winner_if_it_has_three_moves_on_right_column() {
+    fn declare_winner_if_it_has_three_moves_on_right_column() {
         let mut game = Game::default();
 
         _ = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
