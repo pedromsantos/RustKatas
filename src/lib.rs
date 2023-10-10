@@ -189,6 +189,7 @@ mod fizz_buzzer_tests {
     use super::fizz_buzz::*;
     use pretty_assertions::assert_eq;
     use test_case::test_case;
+    use proptest::prelude::*;
 
     #[test_case(1, "1")]
     #[test_case(2, "2")]
@@ -220,6 +221,56 @@ mod fizz_buzzer_tests {
     fn convert_multiples_of_three_and_five_to_fizzbuzz(number: u8) {
         assert_eq!("fizzbuzz", fizz_buzzer(number));
     }
+
+    prop_compose! {
+        fn multiples_of_fifteen(max: u8)(base in 0..max/5) -> u8 { base * 15 }
+    }
+
+    prop_compose! {
+        fn multiples_of_five(max: u8)(base in 0..max) -> u8 { base * 5 }
+    }
+
+    prop_compose! {
+        fn multiples_of_three(max: u8)(base in 0..max) -> u8 { base * 3 }
+    }
+
+    proptest!{
+        #[test]
+        fn multiples_of_three_start_with_fizz(number in multiples_of_three(50)) {
+            assert_eq!(true, fizz_buzzer(number).starts_with("fizz"));
+        }
+    }
+
+    proptest! {
+    #[test]
+        fn multiples_of_five_end_with_buzz(number in multiples_of_five(50)) {
+             assert_eq!(true, fizz_buzzer(number).ends_with("buzz"));
+        }
+    }
+
+    proptest!{
+        #[test]
+        fn multiples_of_three_and_five_are_fizz_buzz(number in multiples_of_fifteen(50)) {
+            assert_eq!("fizzbuzz", fizz_buzzer(number));
+        }
+    }
+
+    proptest!{
+        #[test]
+        fn multiples_of_neither_three_or_five_output_the_number(number: u8) {
+             prop_assume!(number % 3 != 0 && number % 5 != 0);
+
+             assert_eq!(format!("{}", number), fizz_buzzer(number))
+        }
+    }
+
+    // proptest!{
+    //     #[test]
+    //     fn multiples_of_neither_three_or_five_output_the_number(number in 0..100)
+    //     .prop_filter("only multiples of 3 and 5", |n| (0 == n % 3) && (0 == n % 5)) {
+    //         assert_eq!(format!("{}", number, fizz_buzzer(number))
+    //     }
+    // }
 }
 
 #[cfg(test)]
