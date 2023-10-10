@@ -188,8 +188,8 @@ pub mod tic_tac_toe {
 mod fizz_buzzer_tests {
     use super::fizz_buzz::*;
     use pretty_assertions::assert_eq;
-    use test_case::test_case;
     use proptest::prelude::*;
+    use test_case::test_case;
 
     #[test_case(1, "1")]
     #[test_case(2, "2")]
@@ -234,7 +234,7 @@ mod fizz_buzzer_tests {
         fn multiples_of_three(max: u8)(base in 0..max) -> u8 { base * 3 }
     }
 
-    proptest!{
+    proptest! {
         #[test]
         fn multiples_of_three_start_with_fizz(number in multiples_of_three(50)) {
             assert_eq!(true, fizz_buzzer(number).starts_with("fizz"));
@@ -248,14 +248,14 @@ mod fizz_buzzer_tests {
         }
     }
 
-    proptest!{
+    proptest! {
         #[test]
         fn multiples_of_three_and_five_are_fizz_buzz(number in multiples_of_fifteen(50)) {
             assert_eq!("fizzbuzz", fizz_buzzer(number));
         }
     }
 
-    proptest!{
+    proptest! {
         #[test]
         fn multiples_of_neither_three_or_five_output_the_number(number: u8) {
              prop_assume!(number % 3 != 0 && number % 5 != 0);
