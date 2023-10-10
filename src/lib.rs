@@ -94,8 +94,44 @@ pub mod tic_tac_toe {
     }
 
     impl Square {
-        pub fn new(row: Row, column: Column) -> Self {
+        fn new(row: Row, column: Column) -> Self {
             return Square { row, column };
+        }
+
+        pub fn top_left() -> Square {
+            return Square::new(Row::Top, Column::Left);
+        }
+
+        pub fn top_middle() -> Square {
+            return Square::new(Row::Top, Column::Middle);
+        }
+
+        pub fn top_rigth() -> Square {
+            return Square::new(Row::Top, Column::Rigth);
+        }
+
+        pub fn center_left() -> Square {
+            return Square::new(Row::Center, Column::Left);
+        }
+
+        pub fn center_middle() -> Square {
+            return Square::new(Row::Center, Column::Middle);
+        }
+
+        pub fn center_rigth() -> Square {
+            return Square::new(Row::Center, Column::Rigth);
+        }
+
+        pub fn bottom_left() -> Square {
+            return Square::new(Row::Bottom, Column::Left);
+        }
+
+        pub fn bottom_middle() -> Square {
+            return Square::new(Row::Bottom, Column::Middle);
+        }
+
+        pub fn bottom_rigth() -> Square {
+            return Square::new(Row::Bottom, Column::Rigth);
         }
     }
 
@@ -417,7 +453,7 @@ mod tic_tac_toe_should {
     fn not_allow_player_o_to_play_first() {
         let mut game = Game::default();
 
-        let result = game.play(Player::O, Square::new(Row::Top, Column::Left));
+        let result = game.play(Player::O, Square::top_left());
 
         assert_eq!(Err(String::from("Invalid player")), result);
     }
@@ -426,10 +462,10 @@ mod tic_tac_toe_should {
     fn not_allow_player_x_to_play_twice() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        let mut result = game.play(Player::X, Square::top_left());
         assert_eq!(Ok(Status::Playing), result);
 
-        result = game.play(Player::X, Square::new(Row::Top, Column::Middle));
+        result = game.play(Player::X, Square::top_middle());
         assert_eq!(Err(String::from("Invalid player")), result);
     }
 
@@ -437,10 +473,10 @@ mod tic_tac_toe_should {
     fn not_allow_player_to_play_twice_in_same_position() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        let mut result = game.play(Player::X, Square::top_left());
         assert_eq!(Ok(Status::Playing), result);
 
-        result = game.play(Player::O, Square::new(Row::Top, Column::Left));
+        result = game.play(Player::O, Square::top_left());
         assert_eq!(Err(String::from("Invalid move")), result);
     }
 
@@ -448,13 +484,13 @@ mod tic_tac_toe_should {
     fn not_allow_player_to_play_in_same_position_once_taken() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        let mut result = game.play(Player::X, Square::top_left());
         assert_eq!(Ok(Status::Playing), result);
 
-        result = game.play(Player::O, Square::new(Row::Top, Column::Middle));
+        result = game.play(Player::O, Square::top_middle());
         assert_eq!(Ok(Status::Playing), result);
 
-        result = game.play(Player::X, Square::new(Row::Top, Column::Left));
+        result = game.play(Player::X, Square::top_left());
         assert_eq!(Err(String::from("Invalid move")), result);
     }
 
@@ -462,11 +498,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_top_row() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Left));
-        _ = game.play(Player::X, Square::new(Row::Top, Column::Middle));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        let result = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
+        _ = game.play(Player::X, Square::top_left());
+        _ = game.play(Player::O, Square::center_left());
+        _ = game.play(Player::X, Square::top_middle());
+        _ = game.play(Player::O, Square::center_middle());
+        let result = game.play(Player::X, Square::top_rigth());
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -474,11 +510,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_center_row() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Center, Column::Left));
-        _ = game.play(Player::O, Square::new(Row::Top, Column::Left));
-        _ = game.play(Player::X, Square::new(Row::Center, Column::Middle));
-        _ = game.play(Player::O, Square::new(Row::Top, Column::Middle));
-        let result = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
+        _ = game.play(Player::X, Square::center_left());
+        _ = game.play(Player::O, Square::top_left());
+        _ = game.play(Player::X, Square::center_middle());
+        _ = game.play(Player::O, Square::top_middle());
+        let result = game.play(Player::X, Square::center_rigth());
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -486,11 +522,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_bottom_row() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
-        _ = game.play(Player::O, Square::new(Row::Top, Column::Left));
-        _ = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
-        _ = game.play(Player::O, Square::new(Row::Top, Column::Middle));
-        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
+        _ = game.play(Player::X, Square::bottom_left());
+        _ = game.play(Player::O, Square::top_left());
+        _ = game.play(Player::X, Square::bottom_middle());
+        _ = game.play(Player::O, Square::top_middle());
+        let result = game.play(Player::X, Square::bottom_rigth());
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -498,11 +534,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_left_column() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Top, Column::Left));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
-        _ = game.play(Player::X, Square::new(Row::Center, Column::Left));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Left));
+        _ = game.play(Player::X, Square::top_left());
+        _ = game.play(Player::O, Square::center_rigth());
+        _ = game.play(Player::X, Square::center_left());
+        _ = game.play(Player::O, Square::center_middle());
+        let result = game.play(Player::X, Square::bottom_left());
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -510,11 +546,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_middle_column() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Top, Column::Middle));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Rigth));
-        _ = game.play(Player::X, Square::new(Row::Center, Column::Middle));
-        _ = game.play(Player::O, Square::new(Row::Top, Column::Rigth));
-        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Middle));
+        _ = game.play(Player::X, Square::top_middle());
+        _ = game.play(Player::O, Square::center_rigth());
+        _ = game.play(Player::X, Square::center_middle());
+        _ = game.play(Player::O, Square::top_rigth());
+        let result = game.play(Player::X, Square::bottom_middle());
         assert_eq!(Ok(Status::Win), result);
     }
 
@@ -522,11 +558,11 @@ mod tic_tac_toe_should {
     fn declare_winner_if_it_has_three_moves_on_right_column() {
         let mut game = Game::default();
 
-        _ = game.play(Player::X, Square::new(Row::Top, Column::Rigth));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Left));
-        _ = game.play(Player::X, Square::new(Row::Center, Column::Rigth));
-        _ = game.play(Player::O, Square::new(Row::Center, Column::Middle));
-        let result = game.play(Player::X, Square::new(Row::Bottom, Column::Rigth));
+        _ = game.play(Player::X, Square::top_rigth());
+        _ = game.play(Player::O, Square::center_left());
+        _ = game.play(Player::X, Square::center_rigth());
+        _ = game.play(Player::O, Square::center_middle());
+        let result = game.play(Player::X, Square::bottom_rigth());
         assert_eq!(Ok(Status::Win), result);
     }
 }
