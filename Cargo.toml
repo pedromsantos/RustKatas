@@ -2,7 +2,7 @@
 name = "rustkatas"
 version = "0.1.0"
 authors = ["Pedro Moreira Santos @pedromsantos"]
-edition="2021"
+edition = "2021"
 
 [dev-dependencies]
 test-case = { version = "3.1.0" }
