@@ -47,9 +47,9 @@ pub mod roman_numerals {
     ];
 
     pub fn to_roman_numeral(number: u16) -> String {
-        for (arabic_number, roman_nuneral) in ARABIC_NUMBERS_TO_ROMAN_NUMERALS.iter() {
+        for (arabic_number, roman_numeral) in ARABIC_NUMBERS_TO_ROMAN_NUMERALS.iter() {
             if number >= *arabic_number {
-                return (*roman_nuneral).to_string() + &to_roman_numeral(number - arabic_number);
+                return (*roman_numeral).to_string() + &to_roman_numeral(number - arabic_number);
             }
         }
 
@@ -122,7 +122,7 @@ pub mod tic_tac_toe {
             Ok(())
         }
 
-        pub fn is_same_player_in_square_row_or_column(
+        pub fn is_same_player_in_all_squares_in_row_or_column(
             &self,
             player: Player,
             square: Square,
@@ -172,7 +172,7 @@ pub mod tic_tac_toe {
 
             if self
                 .board
-                .is_same_player_in_square_row_or_column(player, square)
+                .is_same_player_in_all_squares_in_row_or_column(player, square)
             {
                 return Ok(Status::Win);
             }
@@ -263,14 +263,6 @@ mod fizz_buzzer_tests {
              assert_eq!(format!("{}", number), fizz_buzzer(number))
         }
     }
-
-    // proptest!{
-    //     #[test]
-    //     fn multiples_of_neither_three_or_five_output_the_number(number in 0..100)
-    //     .prop_filter("only multiples of 3 and 5", |n| (0 == n % 3) && (0 == n % 5)) {
-    //         assert_eq!(format!("{}", number, fizz_buzzer(number))
-    //     }
-    // }
 }
 
 #[cfg(test)]
