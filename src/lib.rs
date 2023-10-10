@@ -127,11 +127,11 @@ pub mod tic_tac_toe {
             player: Player,
             square: Square,
         ) -> bool {
-            return self.is_same_player_in_row(&player, square.row)
-                || self.is_same_player_in_column(&player, square.column);
+            return self.is_same_player_in_all_squares_in_row(&player, square.row)
+                || self.is_same_player_in_all_squares_in_column(&player, square.column);
         }
 
-        fn is_same_player_in_row(&self, player: &Player, row: Row) -> bool {
+        fn is_same_player_in_all_squares_in_row(&self, player: &Player, row: Row) -> bool {
             self.movements
                 .iter()
                 .filter(|m| m.1 == player && m.0.row == row)
@@ -139,7 +139,7 @@ pub mod tic_tac_toe {
                 == 3
         }
 
-        fn is_same_player_in_column(&self, player: &Player, column: Column) -> bool {
+        fn is_same_player_in_all_squares_in_column(&self, player: &Player, column: Column) -> bool {
             self.movements
                 .iter()
                 .filter(|m| m.1 == player && m.0.column == column)
