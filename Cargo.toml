@@ -5,5 +5,5 @@ authors = ["Pedro Moreira Santos @pedromsantos"]
 edition="2021"
 
 [dev-dependencies]
-test-case = "3.1.0"
-pretty_assertions = "1.0.0"
+test-case = { version = "3.1.0" }
+pretty_assertions = { version = "1.0.0" }

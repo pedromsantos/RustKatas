@@ -371,7 +371,7 @@ mod tic_tac_toe_should {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn not_alow_player_o_to_play_first() {
+    fn not_allow_player_o_to_play_first() {
         let mut game = Game::default();
 
         let result = game.play(Player::O, Square::new(Row::Top, Column::Left));
@@ -380,7 +380,7 @@ mod tic_tac_toe_should {
     }
 
     #[test]
-    fn not_alow_player_x_to_play_twice() {
+    fn not_allow_player_x_to_play_twice() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -391,7 +391,7 @@ mod tic_tac_toe_should {
     }
 
     #[test]
-    fn not_alow_player_to_play_twice_in_same_position() {
+    fn not_allow_player_to_play_twice_in_same_position() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
@@ -402,7 +402,7 @@ mod tic_tac_toe_should {
     }
 
     #[test]
-    fn not_alow_player_to_play_in_same_position_once_taken() {
+    fn not_allow_player_to_play_in_same_position_once_taken() {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::new(Row::Top, Column::Left));
