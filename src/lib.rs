@@ -601,7 +601,7 @@ mod mars_rover_acceptance_tests {
     use super::mars_rover::*;
     use pretty_assertions::assert_eq;
 
-    #[ignore]
+    #[ignore = "Ignore acceptance test for now"]
     #[test]
     fn turn_left_and_move() {
         let rover = Rover::default();
@@ -611,7 +611,7 @@ mod mars_rover_acceptance_tests {
         assert_eq!(String::from("1 3 N"), position);
     }
 
-    #[ignore]
+    #[ignore = "Ignore acceptance test for now"]
     #[test]
     fn turn_rigth_and_move() {
         let rover = Rover::default();
