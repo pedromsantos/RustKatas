@@ -575,8 +575,37 @@ pub mod mars_rover {
             Rover {}
         }
 
-        pub fn execute(self, _commands: String) -> String {
-            return String::from("1 2 W");
+        pub fn execute(self, commands: String) -> String {
+            let lines: Vec<&str> = commands.lines().collect();
+
+            let position: &str = lines[1];
+            let position_parts: Vec<&str> = position.split_whitespace().collect();
+            let x: u8 = position_parts[0].parse().unwrap();
+            let y: u8 = position_parts[1].parse().unwrap();
+            let direction = position_parts[2];
+
+            let commands = lines[2];
+            let commands: Vec<char> = commands.chars().collect();
+
+            match commands[0] {
+                'L' =>
+                    match direction {
+                        "N" => format!("{x} {y} W"),
+                        "W" => format!("{x} {y} S"),
+                        "S" => format!("{x} {y} E"),
+                        "E" => format!("{x} {y} N"),
+                        _ => String::from(position)
+                    }
+                'R' =>
+                    match direction {
+                        "N" => format!("{x} {y} E"),
+                        "E" => format!("{x} {y} S"),
+                        "S" => format!("{x} {y} W"),
+                        "W" => format!("{x} {y} N"),
+                        _ => String::from(position)
+                    }
+                _ => String::from(position)
+            }
         }
     }
 }
@@ -587,12 +616,75 @@ mod mars_rover_unit_tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn turn_left() {
+    fn turn_left_turns_from_north_to_west() {
         let rover = Rover::default();
 
-        let position = rover.execute(String::from("5 5\n1 2 N\nL"));
+        let position = rover.execute(String::from("5 5\n1 1 N\nL"));
 
-        assert_eq!(String::from("1 2 W"), position);
+        assert_eq!(String::from("1 1 W"), position);
+    }
+
+    #[test]
+    fn turn_left_turns_from_west_to_south() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 W\nL"));
+
+        assert_eq!(String::from("1 1 S"), position);
+    }
+
+    #[test]
+    fn turn_left_turns_from_south_to_east() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 S\nL"));
+
+        assert_eq!(String::from("1 1 E"), position);
+    }
+
+    #[test]
+    fn turn_left_turns_from_east_to_north() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 E\nL"));
+
+        assert_eq!(String::from("1 1 N"), position);
+    }
+
+    #[test]
+    fn turn_right_turns_from_north_to_east() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 N\nR"));
+
+        assert_eq!(String::from("1 1 E"), position);
+    }
+
+    #[test]
+    fn turn_right_turns_from_east_to_south() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 E\nR"));
+
+        assert_eq!(String::from("1 1 S"), position);
+    }
+
+    #[test]
+    fn turn_right_turns_from_south_to_west() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 S\nR"));
+
+        assert_eq!(String::from("1 1 W"), position);
+    }
+
+    #[test]
+    fn turn_right_turns_from_west_to_north() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 W\nR"));
+
+        assert_eq!(String::from("1 1 N"), position);
     }
 }
 
