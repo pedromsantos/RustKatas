@@ -573,7 +573,6 @@ pub mod mars_rover {
 
     pub struct Rover {}
 
-    #[derive(Debug)]
     enum Direction {
         NORTH,
         WEST,
@@ -625,7 +624,6 @@ pub mod mars_rover {
         }
     }
 
-    #[derive(Debug)]
     struct Position {
         x: u8,
         y: u8,
