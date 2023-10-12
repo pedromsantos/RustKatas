@@ -568,14 +568,132 @@ mod tic_tac_toe_should {
 }
 
 pub mod mars_rover {
+    use std::fmt;
+    use std::str::FromStr;
+
     pub struct Rover {}
 
-    impl Rover {
-        pub fn default() -> Self {
-            Rover {}
+    #[derive(Debug)]
+    enum Direction {
+        NORTH,
+        WEST,
+        SOUTH,
+        EAST
+    }
+
+    impl FromStr for Direction {
+        type Err = ();
+
+        fn from_str(input: &str) -> Result<Direction, Self::Err> {
+            match input {
+                "N" => Ok(Direction::NORTH),
+                "W" => Ok(Direction::WEST),
+                "S" => Ok(Direction::SOUTH),
+                "E" => Ok(Direction::EAST),
+                _ => Err(()),
+            }
+        }
+    }
+
+    impl fmt::Display for Direction {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match self {
+                Direction::NORTH => write!(f, "N"),
+                Direction::SOUTH => write!(f, "S"),
+                Direction::WEST => write!(f, "W"),
+                Direction::EAST => write!(f, "E")
+            }
+        }
+    }
+
+    enum Command {
+        Left,
+        Right,
+        Move,
+        Null
+    }
+
+    impl Command {
+
+        fn from(input: &char) -> Command {
+            match input {
+                'L' => Command::Left,
+                'R' => Command::Right,
+                'M' => Command::Move,
+                _ => Command::Null,
+            }
+        }
+    }
+
+    #[derive(Debug)]
+    struct Position {
+        x: u8,
+        y: u8,
+        direction: Direction
+    }
+
+    impl Position {
+        pub fn turn_left(&self) -> Position {
+            match self.direction {
+                Direction::NORTH => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::WEST,
+                },
+                Direction::WEST => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::SOUTH,
+                },
+                Direction::SOUTH => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::EAST,
+                },
+                Direction::EAST => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::NORTH,
+                }
+            }
         }
 
-        pub fn execute(self, commands: String) -> String {
+        pub fn turn_right(&self) -> Position {
+            match self.direction {
+                Direction::NORTH => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::EAST,
+                },
+                Direction::WEST => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::NORTH,
+                },
+                Direction::SOUTH => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::WEST,
+                },
+                Direction::EAST => Position {
+                    x: self.x,
+                    y: self.y,
+                    direction: Direction::SOUTH,
+                }
+            }
+        }
+    }
+
+    impl fmt::Display for Position {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{} {} {}", self.x, self.y, self.direction)
+        }
+    }
+
+    struct Parser {}
+
+    impl Parser {
+        pub fn parse(&self, commands: String) -> (Position, Vec<Command>) {
             let lines: Vec<&str> = commands.lines().collect();
 
             let position: &str = lines[1];
@@ -586,25 +704,33 @@ pub mod mars_rover {
 
             let commands = lines[2];
             let commands: Vec<char> = commands.chars().collect();
+            let commands= commands
+                .iter()
+                .map(|c| Command::from(c)
+                ).collect();
+
+            return (Position{
+                x,
+                y,
+                direction: Direction::from_str(direction).unwrap(),
+            }, commands)
+        }
+    }
+
+    impl Rover {
+        pub fn default() -> Self {
+            Rover {}
+        }
+
+        pub fn execute(self, commands: String) -> String {
+            let parser:Parser = Parser{};
+
+            let (position, commands) = parser.parse(commands);
 
             match commands[0] {
-                'L' =>
-                    match direction {
-                        "N" => format!("{x} {y} W"),
-                        "W" => format!("{x} {y} S"),
-                        "S" => format!("{x} {y} E"),
-                        "E" => format!("{x} {y} N"),
-                        _ => String::from(position)
-                    }
-                'R' =>
-                    match direction {
-                        "N" => format!("{x} {y} E"),
-                        "E" => format!("{x} {y} S"),
-                        "S" => format!("{x} {y} W"),
-                        "W" => format!("{x} {y} N"),
-                        _ => String::from(position)
-                    }
-                _ => String::from(position)
+                Command::Left => position.turn_left().to_string(),
+                Command::Right => position.turn_right().to_string(),
+                _ => position.to_string(),
             }
         }
     }
