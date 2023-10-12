@@ -696,8 +696,8 @@ pub mod mars_rover {
 
             let position: &str = lines[1];
             let position_parts: Vec<&str> = position.split_whitespace().collect();
-            let x: u8 = position_parts[0].parse().unwrap();
-            let y: u8 = position_parts[1].parse().unwrap();
+            let x: u8 = position_parts[0].parse().unwrap_or(0);
+            let y: u8 = position_parts[1].parse().unwrap_or(0);
             let direction = position_parts[2];
 
             let commands = lines[2];
@@ -710,7 +710,7 @@ pub mod mars_rover {
             return (Position{
                 x,
                 y,
-                direction: Direction::from_str(direction).unwrap(),
+                direction: Direction::from_str(direction).unwrap_or(Direction::NORTH),
             }, commands)
         }
     }
