@@ -631,53 +631,28 @@ pub mod mars_rover {
     }
 
     impl Position {
+        pub fn new(x: u8, y: u8, direction: Direction) -> Self {
+            Self { x, y, direction }
+        }
+        fn change_direction(&self, direction: Direction) -> Self {
+            Position::new(self.x, self.y, direction)
+        }
+
         pub fn turn_left(&self) -> Position {
             match self.direction {
-                Direction::NORTH => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::WEST,
-                },
-                Direction::WEST => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::SOUTH,
-                },
-                Direction::SOUTH => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::EAST,
-                },
-                Direction::EAST => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::NORTH,
-                }
+                Direction::NORTH => self.change_direction(Direction::WEST),
+                Direction::WEST => self.change_direction(Direction::SOUTH),
+                Direction::SOUTH => self.change_direction(Direction::EAST),
+                Direction::EAST => self.change_direction(Direction::NORTH)
             }
         }
 
         pub fn turn_right(&self) -> Position {
             match self.direction {
-                Direction::NORTH => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::EAST,
-                },
-                Direction::WEST => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::NORTH,
-                },
-                Direction::SOUTH => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::WEST,
-                },
-                Direction::EAST => Position {
-                    x: self.x,
-                    y: self.y,
-                    direction: Direction::SOUTH,
-                }
+                Direction::NORTH => self.change_direction(Direction::EAST),
+                Direction::WEST => self.change_direction(Direction::NORTH),
+                Direction::SOUTH =>self.change_direction(Direction::WEST),
+                Direction::EAST => self.change_direction(Direction::SOUTH)
             }
         }
     }
@@ -693,34 +668,33 @@ pub mod mars_rover {
     impl Parser {
         pub fn parse(&self, commands: String) -> (Position, Vec<Command>) {
             let lines: Vec<&str> = commands.lines().collect();
+            let position =  self.parse_position(lines[1]);
 
-            let position: &str = lines[1];
+            if lines.len() < 3 {
+                return (position, Vec::new())
+            }
+
+            let commands = self.parse_commands(lines[2]);
+
+            return (position, commands)
+        }
+
+        fn parse_position(&self, position: &str) -> Position {
             let position_parts: Vec<&str> = position.split_whitespace().collect();
             let x: u8 = position_parts[0].parse().unwrap_or(0);
             let y: u8 = position_parts[1].parse().unwrap_or(0);
             let direction = position_parts[2];
 
-            if lines.len() > 2 {
-                let commands = lines[2];
-                let commands: Vec<char> = commands.chars().collect();
-                let commands = commands
-                    .iter()
-                    .map(|c| Command::from(c)
-                    ).collect();
+            return Position::new(x,y, Direction::from_str(direction).unwrap_or(Direction::NORTH));
+        }
 
-                return (Position{
-                    x,
-                    y,
-                    direction: Direction::from_str(direction).unwrap_or(Direction::NORTH),
-                }, commands)
-            }
-
-
-            return (Position{
-                x,
-                y,
-                direction: Direction::from_str(direction).unwrap_or(Direction::NORTH),
-            }, Vec::new())
+        fn parse_commands(&self, commands: &str) -> Vec<Command> {
+            let commands = commands;
+            let commands: Vec<char> = commands.chars().collect();
+            return commands
+                .iter()
+                .map(|c| Command::from(c))
+                .collect();
         }
     }
 
