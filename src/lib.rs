@@ -700,18 +700,27 @@ pub mod mars_rover {
             let y: u8 = position_parts[1].parse().unwrap_or(0);
             let direction = position_parts[2];
 
-            let commands = lines[2];
-            let commands: Vec<char> = commands.chars().collect();
-            let commands= commands
-                .iter()
-                .map(|c| Command::from(c)
-                ).collect();
+            if lines.len() > 2 {
+                let commands = lines[2];
+                let commands: Vec<char> = commands.chars().collect();
+                let commands = commands
+                    .iter()
+                    .map(|c| Command::from(c)
+                    ).collect();
+
+                return (Position{
+                    x,
+                    y,
+                    direction: Direction::from_str(direction).unwrap_or(Direction::NORTH),
+                }, commands)
+            }
+
 
             return (Position{
                 x,
                 y,
                 direction: Direction::from_str(direction).unwrap_or(Direction::NORTH),
-            }, commands)
+            }, Vec::new())
         }
     }
 
@@ -722,14 +731,19 @@ pub mod mars_rover {
 
         pub fn execute(self, commands: String) -> String {
             let parser:Parser = Parser{};
-
             let (position, commands) = parser.parse(commands);
 
-            match commands[0] {
-                Command::Left => position.turn_left().to_string(),
-                Command::Right => position.turn_right().to_string(),
-                _ => position.to_string(),
+            let mut final_position = position.to_string();
+
+            for c in commands {
+                final_position = match c {
+                    Command::Left => position.turn_left().to_string(),
+                    Command::Right => position.turn_right().to_string(),
+                    _ => position.to_string(),
+                }
             }
+
+            return final_position;
         }
     }
 }
@@ -738,6 +752,15 @@ pub mod mars_rover {
 mod mars_rover_unit_tests {
     use super::mars_rover::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn stays_in_same_position_when_no_commands_are_sent() {
+        let rover = Rover::default();
+
+        let position = rover.execute(String::from("5 5\n1 1 N\n"));
+
+        assert_eq!(String::from("1 1 N"), position);
+    }
 
     #[test]
     fn turn_left_turns_from_north_to_west() {
