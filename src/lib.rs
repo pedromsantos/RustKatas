@@ -700,26 +700,53 @@ pub mod mars_rover {
     }
 
     pub struct Rover {
+        position: Position,
         parser: Parser,
     }
 
     impl Rover {
         pub fn new(parser: Parser) -> Self {
-            Rover { parser: parser }
+            Rover {
+                position: Position {
+                    x: 0,
+                    y: 0,
+                    direction: Direction::NORTH,
+                },
+                parser: parser,
+            }
         }
 
-        pub fn execute(self, instructions: String) -> String {
-            let (mut position, commands) = self.parser.parse(instructions);
+        pub fn execute(mut self, instructions: String) -> String {
+            let (position, commands) = self.parser.parse(instructions);
+            self.position = position;
 
             for c in commands {
-                position = match c {
-                    Command::Left => position.turn_left(),
-                    Command::Right => position.turn_right(),
-                    _ => position,
+                self = match c {
+                    Command::Left => self.turn_left(),
+                    Command::Right => self.turn_right(),
+                    _ => self,
                 }
             }
 
-            return position.to_string();
+            return self.print_final_position();
+        }
+
+        fn turn_left(self) -> Rover {
+            return Rover {
+                position: self.position.turn_left(),
+                parser: self.parser,
+            };
+        }
+
+        fn turn_right(self) -> Rover {
+            return Rover {
+                position: self.position.turn_right(),
+                parser: self.parser,
+            };
+        }
+
+        fn print_final_position(self) -> String {
+            self.position.to_string()
         }
     }
 }
