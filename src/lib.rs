@@ -871,7 +871,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_right_turns_from_north_to_east() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nR"));
 
