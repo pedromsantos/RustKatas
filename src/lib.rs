@@ -653,9 +653,9 @@ pub mod mars_rover {
         pub fn move_position(&mut self) {
             match self.direction {
                 Direction::NORTH => self.increment_y(),
-                Direction::WEST => self.increment_x(),
+                Direction::WEST => self.decrement_x(),
                 Direction::SOUTH => self.decrement_y(),
-                Direction::EAST => self.decrement_x(),
+                Direction::EAST => self.increment_x(),
             }
         }
 
@@ -908,7 +908,7 @@ mod mars_rover_unit_tests {
 
         let position = rover.execute(String::from("5 5\n1 1 W\nM"));
 
-        assert_eq!(String::from("2 1 W"), position);
+        assert_eq!(String::from("0 1 W"), position);
     }
 
     #[test]
@@ -917,7 +917,7 @@ mod mars_rover_unit_tests {
 
         let position = rover.execute(String::from("5 5\n1 1 E\nM"));
 
-        assert_eq!(String::from("0 1 E"), position);
+        assert_eq!(String::from("2 1 E"), position);
     }
 }
 
@@ -926,7 +926,6 @@ mod mars_rover_acceptance_tests {
     use super::mars_rover::*;
     use pretty_assertions::assert_eq;
 
-    #[ignore = "Ignore acceptance test for now"]
     #[test]
     fn turn_left_and_move() {
         let rover = Rover::new(Parser::new());
@@ -936,7 +935,6 @@ mod mars_rover_acceptance_tests {
         assert_eq!(String::from("1 3 N"), position);
     }
 
-    #[ignore = "Ignore acceptance test for now"]
     #[test]
     fn turn_rigth_and_move() {
         let rover = Rover::new(Parser::new());
