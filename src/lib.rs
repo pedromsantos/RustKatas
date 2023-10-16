@@ -621,15 +621,50 @@ pub mod mars_rover {
         }
     }
 
-    pub struct Position {
+    pub struct Coordinate {
         x: u8,
         y: u8,
+    }
+
+    impl fmt::Display for Coordinate {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{} {}", self.x, self.y)
+        }
+    }
+
+    impl Coordinate {
+        pub fn new(x: u8, y: u8) -> Self {
+            Self { x, y }
+        }
+
+        pub fn increment_y(&mut self) {
+            self.y += 1;
+        }
+
+        pub fn decrement_y(&mut self) {
+            self.y -= 1;
+        }
+
+        pub fn increment_x(&mut self) {
+            self.x += 1;
+        }
+
+        pub fn decrement_x(&mut self) {
+            self.x -= 1;
+        }
+    }
+
+    pub struct Position {
+        coordinate: Coordinate,
         direction: Direction,
     }
 
     impl Position {
-        pub fn new(x: u8, y: u8, direction: Direction) -> Self {
-            Self { x, y, direction }
+        pub fn new(coordinate: Coordinate, direction: Direction) -> Self {
+            Self {
+                coordinate: coordinate,
+                direction: direction,
+            }
         }
 
         pub fn turn_left(&mut self) {
@@ -652,10 +687,10 @@ pub mod mars_rover {
 
         pub fn move_position(&mut self) {
             match self.direction {
-                Direction::NORTH => self.increment_y(),
-                Direction::WEST => self.decrement_x(),
-                Direction::SOUTH => self.decrement_y(),
-                Direction::EAST => self.increment_x(),
+                Direction::NORTH => self.move_north(),
+                Direction::WEST => self.move_west(),
+                Direction::SOUTH => self.move_south(),
+                Direction::EAST => self.move_east(),
             }
         }
 
@@ -663,26 +698,26 @@ pub mod mars_rover {
             self.direction = direction;
         }
 
-        fn increment_y(&mut self) {
-            self.y += 1;
+        pub fn move_north(&mut self) {
+            self.coordinate.increment_y()
         }
 
-        fn decrement_y(&mut self) {
-            self.y -= 1;
+        pub fn move_south(&mut self) {
+            self.coordinate.decrement_y()
         }
 
-        fn increment_x(&mut self) {
-            self.x += 1;
+        pub fn move_east(&mut self) {
+            self.coordinate.increment_x()
         }
 
-        fn decrement_x(&mut self) {
-            self.x -= 1;
+        pub fn move_west(&mut self) {
+            self.coordinate.decrement_x()
         }
     }
 
     impl fmt::Display for Position {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "{} {} {}", self.x, self.y, self.direction)
+            write!(f, "{} {}", self.coordinate, self.direction)
         }
     }
 
@@ -713,8 +748,7 @@ pub mod mars_rover {
             let direction = position_parts[2];
 
             return Position::new(
-                x,
-                y,
+                Coordinate::new(x, y),
                 Direction::from_str(direction).unwrap_or(Direction::NORTH),
             );
         }
@@ -733,11 +767,7 @@ pub mod mars_rover {
     impl Rover {
         pub fn new(parser: Parser) -> Self {
             Rover {
-                position: Position {
-                    x: 0,
-                    y: 0,
-                    direction: Direction::NORTH,
-                },
+                position: Position::new(Coordinate::new(0, 0), Direction::NORTH),
                 parser: parser,
             }
         }
