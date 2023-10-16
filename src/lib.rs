@@ -772,7 +772,7 @@ pub mod mars_rover {
             }
         }
 
-        pub fn execute(mut self, instructions: String) -> String {
+        pub fn execute(&mut self, instructions: String) -> String {
             let (position, commands) = self.parser.parse(instructions);
             self.update_position(position);
 
@@ -817,7 +817,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn stays_in_same_position_when_no_commands_are_sent() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\n"));
 
@@ -826,7 +826,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_left_turns_from_north_to_west() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nL"));
 
@@ -835,7 +835,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_left_turns_from_west_to_south() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 W\nL"));
 
@@ -844,7 +844,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_left_turns_from_south_to_east() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 S\nL"));
 
@@ -853,7 +853,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_left_turns_from_east_to_north() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 E\nL"));
 
@@ -862,7 +862,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_left_four_time_ends_in_same_position() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nLLLL"));
 
@@ -880,7 +880,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_right_turns_from_east_to_south() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 E\nR"));
 
@@ -889,7 +889,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_right_turns_from_south_to_west() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 S\nR"));
 
@@ -898,7 +898,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_right_turns_from_west_to_north() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 W\nR"));
 
@@ -907,7 +907,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn turn_right_four_time_ends_in_same_position() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nRRRR"));
 
@@ -916,7 +916,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn move_north() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nM"));
 
@@ -925,7 +925,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn move_south() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 S\nM"));
 
@@ -934,7 +934,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn move_west() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 W\nM"));
 
@@ -943,7 +943,7 @@ mod mars_rover_unit_tests {
 
     #[test]
     fn move_east() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 E\nM"));
 
@@ -958,7 +958,7 @@ mod mars_rover_acceptance_tests {
 
     #[test]
     fn turn_left_and_move() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 2 N\nLMLMLMLMM"));
 
@@ -967,7 +967,7 @@ mod mars_rover_acceptance_tests {
 
     #[test]
     fn turn_rigth_and_move() {
-        let rover = Rover::new(Parser::new());
+        let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n3 3 E\nMMRMMRMRRM"));
 
