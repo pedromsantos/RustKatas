@@ -694,7 +694,6 @@ pub mod mars_rover {
         }
 
         fn parse_commands(&self, commands: &str) -> Vec<Command> {
-            let commands = commands;
             let commands: Vec<char> = commands.chars().collect();
             return commands.iter().map(|c| Command::from(c)).collect();
         }
