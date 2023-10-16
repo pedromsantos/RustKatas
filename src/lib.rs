@@ -655,7 +655,7 @@ pub mod mars_rover {
                 Direction::NORTH => self.increment_y(),
                 Direction::WEST => self.increment_x(),
                 Direction::SOUTH => self.decrement_y(),
-                Direction::EAST => self.increment_y(),
+                Direction::EAST => self.decrement_x(),
             }
         }
 
@@ -673,6 +673,10 @@ pub mod mars_rover {
 
         fn increment_x(&mut self) {
             self.x += 1;
+        }
+
+        fn decrement_x(&mut self) {
+            self.x -= 1;
         }
     }
 
@@ -905,6 +909,15 @@ mod mars_rover_unit_tests {
         let position = rover.execute(String::from("5 5\n1 1 W\nM"));
 
         assert_eq!(String::from("2 1 W"), position);
+    }
+
+    #[test]
+    fn move_east() {
+        let rover = Rover::new(Parser::new());
+
+        let position = rover.execute(String::from("5 5\n1 1 E\nM"));
+
+        assert_eq!(String::from("0 1 E"), position);
     }
 }
 
