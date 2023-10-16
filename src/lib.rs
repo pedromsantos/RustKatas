@@ -667,8 +667,8 @@ pub mod mars_rover {
             Parser {}
         }
 
-        pub fn parse(&self, commands: String) -> (Position, Vec<Command>) {
-            let lines: Vec<&str> = commands.lines().collect();
+        pub fn parse(&self, instructions: String) -> (Position, Vec<Command>) {
+            let lines: Vec<&str> = instructions.lines().collect();
             let position = self.parse_position(lines[1]);
 
             if lines.len() < 3 {
@@ -709,10 +709,10 @@ pub mod mars_rover {
             Rover { parser: parser }
         }
 
-        pub fn execute(self, commands: String) -> String {
-            let (mut position, parsed_commands) = self.parser.parse(commands);
+        pub fn execute(self, instructions: String) -> String {
+            let (mut position, commands) = self.parser.parse(instructions);
 
-            for c in parsed_commands {
+            for c in commands {
                 position = match c {
                     Command::Left => position.turn_left(),
                     Command::Right => position.turn_right(),
