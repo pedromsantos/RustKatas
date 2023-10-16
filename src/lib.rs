@@ -575,7 +575,7 @@ pub mod mars_rover {
         NORTH,
         WEST,
         SOUTH,
-        EAST
+        EAST,
     }
 
     impl FromStr for Direction {
@@ -598,7 +598,7 @@ pub mod mars_rover {
                 Direction::NORTH => write!(f, "N"),
                 Direction::SOUTH => write!(f, "S"),
                 Direction::WEST => write!(f, "W"),
-                Direction::EAST => write!(f, "E")
+                Direction::EAST => write!(f, "E"),
             }
         }
     }
@@ -607,11 +607,10 @@ pub mod mars_rover {
         Left,
         Right,
         Move,
-        Null
+        Null,
     }
 
     impl Command {
-
         fn from(input: &char) -> Command {
             match input {
                 'L' => Command::Left,
@@ -625,7 +624,7 @@ pub mod mars_rover {
     pub struct Position {
         x: u8,
         y: u8,
-        direction: Direction
+        direction: Direction,
     }
 
     impl Position {
@@ -641,7 +640,7 @@ pub mod mars_rover {
                 Direction::NORTH => self.change_direction(Direction::WEST),
                 Direction::WEST => self.change_direction(Direction::SOUTH),
                 Direction::SOUTH => self.change_direction(Direction::EAST),
-                Direction::EAST => self.change_direction(Direction::NORTH)
+                Direction::EAST => self.change_direction(Direction::NORTH),
             }
         }
 
@@ -649,8 +648,8 @@ pub mod mars_rover {
             match self.direction {
                 Direction::NORTH => self.change_direction(Direction::EAST),
                 Direction::WEST => self.change_direction(Direction::NORTH),
-                Direction::SOUTH =>self.change_direction(Direction::WEST),
-                Direction::EAST => self.change_direction(Direction::SOUTH)
+                Direction::SOUTH => self.change_direction(Direction::WEST),
+                Direction::EAST => self.change_direction(Direction::SOUTH),
             }
         }
     }
@@ -670,15 +669,15 @@ pub mod mars_rover {
 
         pub fn parse(&self, commands: String) -> (Position, Vec<Command>) {
             let lines: Vec<&str> = commands.lines().collect();
-            let position =  self.parse_position(lines[1]);
+            let position = self.parse_position(lines[1]);
 
             if lines.len() < 3 {
-                return (position, Vec::new())
+                return (position, Vec::new());
             }
 
             let commands = self.parse_commands(lines[2]);
 
-            return (position, commands)
+            return (position, commands);
         }
 
         fn parse_position(&self, position: &str) -> Position {
@@ -687,42 +686,41 @@ pub mod mars_rover {
             let y: u8 = position_parts[1].parse().unwrap_or(0);
             let direction = position_parts[2];
 
-            return Position::new(x,y, Direction::from_str(direction).unwrap_or(Direction::NORTH));
+            return Position::new(
+                x,
+                y,
+                Direction::from_str(direction).unwrap_or(Direction::NORTH),
+            );
         }
 
         fn parse_commands(&self, commands: &str) -> Vec<Command> {
             let commands = commands;
             let commands: Vec<char> = commands.chars().collect();
-            return commands
-                .iter()
-                .map(|c| Command::from(c))
-                .collect();
+            return commands.iter().map(|c| Command::from(c)).collect();
         }
     }
 
     pub struct Rover {
-        parser: Parser
+        parser: Parser,
     }
 
     impl Rover {
         pub fn new(parser: Parser) -> Self {
-            Rover {parser: parser}
+            Rover { parser: parser }
         }
 
         pub fn execute(self, commands: String) -> String {
-            let (position, commands) = self.parser.parse(commands);
+            let (mut position, parsed_commands) = self.parser.parse(commands);
 
-            let mut final_position = position.to_string();
-
-            for c in commands {
-                final_position = match c {
-                    Command::Left => position.turn_left().to_string(),
-                    Command::Right => position.turn_right().to_string(),
-                    _ => position.to_string(),
+            for c in parsed_commands {
+                position = match c {
+                    Command::Left => position.turn_left(),
+                    Command::Right => position.turn_right(),
+                    _ => position,
                 }
             }
 
-            return final_position;
+            return position.to_string();
         }
     }
 }
@@ -778,7 +776,7 @@ mod mars_rover_unit_tests {
     }
 
     #[test]
-    fn turn_left_four_time_ends_in_same_positio() {
+    fn turn_left_four_time_ends_in_same_position() {
         let rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n1 1 N\nLLLL"));
