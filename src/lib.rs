@@ -718,34 +718,32 @@ pub mod mars_rover {
 
         pub fn execute(mut self, instructions: String) -> String {
             let (position, commands) = self.parser.parse(instructions);
-            self.position = position;
+            self.update_position(position);
 
             for c in commands {
-                self = match c {
+                match c {
                     Command::Left => self.turn_left(),
                     Command::Right => self.turn_right(),
-                    _ => self,
+                    _ => {}
                 }
             }
 
             return self.print_final_position();
         }
 
-        fn turn_left(self) -> Rover {
-            return Rover {
-                position: self.position.turn_left(),
-                parser: self.parser,
-            };
+        fn update_position(&mut self, position: Position) {
+            self.position = position;
         }
 
-        fn turn_right(self) -> Rover {
-            return Rover {
-                position: self.position.turn_right(),
-                parser: self.parser,
-            };
+        fn turn_left(&mut self) {
+            self.position = self.position.turn_left();
         }
 
-        fn print_final_position(self) -> String {
+        fn turn_right(&mut self) {
+            self.position = self.position.turn_right();
+        }
+
+        fn print_final_position(&self) -> String {
             self.position.to_string()
         }
     }
