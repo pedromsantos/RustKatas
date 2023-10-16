@@ -631,11 +631,8 @@ pub mod mars_rover {
         pub fn new(x: u8, y: u8, direction: Direction) -> Self {
             Self { x, y, direction }
         }
-        fn change_direction(&self, direction: Direction) -> Self {
-            Position::new(self.x, self.y, direction)
-        }
 
-        pub fn turn_left(&self) -> Position {
+        pub fn turn_left(&mut self) {
             match self.direction {
                 Direction::NORTH => self.change_direction(Direction::WEST),
                 Direction::WEST => self.change_direction(Direction::SOUTH),
@@ -644,13 +641,30 @@ pub mod mars_rover {
             }
         }
 
-        pub fn turn_right(&self) -> Position {
+        pub fn turn_right(&mut self) {
             match self.direction {
                 Direction::NORTH => self.change_direction(Direction::EAST),
                 Direction::WEST => self.change_direction(Direction::NORTH),
                 Direction::SOUTH => self.change_direction(Direction::WEST),
                 Direction::EAST => self.change_direction(Direction::SOUTH),
             }
+        }
+
+        pub fn move_position(&mut self) {
+            match self.direction {
+                Direction::NORTH => self.increment_y(),
+                Direction::WEST => self.increment_y(),
+                Direction::SOUTH => self.increment_y(),
+                Direction::EAST => self.increment_y(),
+            }
+        }
+
+        fn change_direction(&mut self, direction: Direction) {
+            self.direction = direction;
+        }
+
+        fn increment_y(&mut self) {
+            self.y = self.y + 1;
         }
     }
 
@@ -724,6 +738,7 @@ pub mod mars_rover {
                 match c {
                     Command::Left => self.turn_left(),
                     Command::Right => self.turn_right(),
+                    Command::Move => self.move_rover(),
                     _ => {}
                 }
             }
@@ -736,11 +751,15 @@ pub mod mars_rover {
         }
 
         fn turn_left(&mut self) {
-            self.position = self.position.turn_left();
+            self.position.turn_left();
         }
 
         fn turn_right(&mut self) {
-            self.position = self.position.turn_right();
+            self.position.turn_right();
+        }
+
+        fn move_rover(&mut self) {
+            self.position.move_position();
         }
 
         fn print_final_position(&self) -> String {
@@ -851,6 +870,15 @@ mod mars_rover_unit_tests {
         let position = rover.execute(String::from("5 5\n1 1 N\nRRRR"));
 
         assert_eq!(String::from("1 1 N"), position);
+    }
+
+    #[test]
+    fn move_north() {
+        let rover = Rover::new(Parser::new());
+
+        let position = rover.execute(String::from("5 5\n1 1 N\nM"));
+
+        assert_eq!(String::from("1 2 N"), position);
     }
 }
 
