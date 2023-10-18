@@ -974,10 +974,12 @@ mod mars_rover_acceptance_tests {
 pub mod mars_rover_2 {
     use std::fmt;
 
+    struct DirectionMoveVector(i8, i8);
+
     trait Direction {
         fn turn_left(&self) -> Box<dyn Direction>;
         fn turn_rigth(&self) -> Box<dyn Direction>;
-        fn move_vector(&self) -> (i8, i8);
+        fn move_vector(&self) -> DirectionMoveVector;
         fn to_string(&self) -> String;
     }
 
@@ -998,8 +1000,8 @@ pub mod mars_rover_2 {
             return String::from("N");
         }
 
-        fn move_vector(&self) -> (i8, i8) {
-            return (0, 1);
+        fn move_vector(&self) -> DirectionMoveVector {
+            return DirectionMoveVector(0, 1);
         }
     }
 
@@ -1015,8 +1017,8 @@ pub mod mars_rover_2 {
             return String::from("S");
         }
 
-        fn move_vector(&self) -> (i8, i8) {
-            return (0, -1);
+        fn move_vector(&self) -> DirectionMoveVector {
+            return DirectionMoveVector(0, -1);
         }
     }
 
@@ -1033,8 +1035,8 @@ pub mod mars_rover_2 {
             return String::from("E");
         }
 
-        fn move_vector(&self) -> (i8, i8) {
-            return (1, 0);
+        fn move_vector(&self) -> DirectionMoveVector {
+            return DirectionMoveVector(1, 0);
         }
     }
 
@@ -1050,8 +1052,8 @@ pub mod mars_rover_2 {
             return String::from("W");
         }
 
-        fn move_vector(&self) -> (i8, i8) {
-            return (-1, 0);
+        fn move_vector(&self) -> DirectionMoveVector {
+            return DirectionMoveVector(-1, 0);
         }
     }
 
@@ -1146,7 +1148,7 @@ pub mod mars_rover_2 {
             Self { x, y }
         }
 
-        pub fn apply_vector(&mut self, vector: (i8, i8)) {
+        pub fn apply_vector(&mut self, vector: DirectionMoveVector) {
             self.x = (self.x as i8 + vector.0) as u8;
             self.y = (self.y as i8 + vector.1) as u8;
         }
