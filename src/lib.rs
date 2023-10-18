@@ -785,7 +785,7 @@ pub mod mars_rover {
                 }
             }
 
-            return self.print_final_position();
+            return format!("{}", self.position);
         }
 
         fn update_position(&mut self, position: Position) {
@@ -802,10 +802,6 @@ pub mod mars_rover {
 
         fn move_rover(&mut self) {
             self.position.move_position();
-        }
-
-        fn print_final_position(&self) -> String {
-            self.position.to_string()
         }
     }
 }
@@ -1248,7 +1244,7 @@ pub mod mars_rover_2 {
 
             commands.execute(self);
 
-            return self.print_final_position();
+            return format!("{}", self.position);
         }
 
         fn update_position(&mut self, position: Position) {
@@ -1265,10 +1261,6 @@ pub mod mars_rover_2 {
 
         fn move_forward(&mut self) {
             self.position.move_forward();
-        }
-
-        fn print_final_position(&self) -> String {
-            self.position.to_string()
         }
     }
 }
