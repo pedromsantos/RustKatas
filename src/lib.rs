@@ -1124,7 +1124,7 @@ pub mod mars_rover_2 {
             self.commands.iter().for_each(|c| c.execute(rover));
         }
 
-        fn create(input: &char) -> Box<dyn RoverCommand> {
+        fn create_command(input: &char) -> Box<dyn RoverCommand> {
             match input {
                 'M' => Box::new(MoveForward),
                 'L' => Box::new(TurnLeft),
@@ -1223,8 +1223,7 @@ pub mod mars_rover_2 {
 
             raw_commands
                 .iter()
-                .map(|c| Commands::create(c))
-                .for_each(|c| commands.add(c));
+                .for_each(|c| commands.add(Commands::create_command(c)));
 
             return commands;
         }
@@ -1252,16 +1251,16 @@ pub mod mars_rover_2 {
             return self.print_final_position();
         }
 
+        fn update_position(&mut self, position: Position) {
+            self.position = position;
+        }
+
         fn turn_left(&mut self) {
             self.position.turn_left();
         }
 
         fn turn_right(&mut self) {
             self.position.turn_right();
-        }
-
-        fn update_position(&mut self, position: Position) {
-            self.position = position;
         }
 
         fn move_forward(&mut self) {
