@@ -571,7 +571,7 @@ pub mod mars_rover {
     use std::fmt;
     use std::str::FromStr;
 
-    pub enum Direction {
+    enum Direction {
         NORTH,
         WEST,
         SOUTH,
@@ -621,7 +621,7 @@ pub mod mars_rover {
         }
     }
 
-    pub struct Coordinate {
+    struct Coordinate {
         x: u8,
         y: u8,
     }
@@ -660,14 +660,14 @@ pub mod mars_rover {
     }
 
     impl Position {
-        pub fn new(coordinate: Coordinate, direction: Direction) -> Self {
+        fn new(coordinate: Coordinate, direction: Direction) -> Self {
             Self {
                 coordinate: coordinate,
                 direction: direction,
             }
         }
 
-        pub fn turn_left(&mut self) {
+        fn turn_left(&mut self) {
             match self.direction {
                 Direction::NORTH => self.change_direction(Direction::WEST),
                 Direction::WEST => self.change_direction(Direction::SOUTH),
@@ -676,7 +676,7 @@ pub mod mars_rover {
             }
         }
 
-        pub fn turn_right(&mut self) {
+        fn turn_right(&mut self) {
             match self.direction {
                 Direction::NORTH => self.change_direction(Direction::EAST),
                 Direction::WEST => self.change_direction(Direction::NORTH),
@@ -685,7 +685,7 @@ pub mod mars_rover {
             }
         }
 
-        pub fn move_position(&mut self) {
+        fn move_position(&mut self) {
             match self.direction {
                 Direction::NORTH => self.move_north(),
                 Direction::WEST => self.move_west(),
@@ -698,15 +698,15 @@ pub mod mars_rover {
             self.direction = direction;
         }
 
-        pub fn move_north(&mut self) {
+        fn move_north(&mut self) {
             self.coordinate.increment_y()
         }
 
-        pub fn move_south(&mut self) {
+        fn move_south(&mut self) {
             self.coordinate.decrement_y()
         }
 
-        pub fn move_east(&mut self) {
+        fn move_east(&mut self) {
             self.coordinate.increment_x()
         }
 
@@ -978,17 +978,17 @@ mod mars_rover_acceptance_tests {
 pub mod mars_rover_2 {
     use std::fmt;
 
-    pub trait Direction {
+    trait Direction {
         fn turn_left(&self) -> Box<dyn Direction>;
         fn turn_rigth(&self) -> Box<dyn Direction>;
         fn move_vector(&self) -> (i8, i8);
         fn to_string(&self) -> String;
     }
 
-    pub struct North;
-    pub struct South;
-    pub struct West;
-    pub struct East;
+    struct North;
+    struct South;
+    struct West;
+    struct East;
 
     impl Direction for North {
         fn turn_left(&self) -> Box<dyn Direction> {
@@ -1073,24 +1073,68 @@ pub mod mars_rover_2 {
         }
     }
 
-    pub enum Command {
-        Left,
-        Right,
-        Move,
-        Null,
+    trait RoverCommand {
+        fn execute(&self, rover: &mut Rover);
     }
 
-    impl Command {
-        fn from(input: &char) -> Command {
+    struct MoveForward;
+
+    struct TurnLeft;
+
+    struct TurnRight;
+
+    struct DoNothing;
+
+    impl RoverCommand for MoveForward {
+        fn execute(&self, rover: &mut Rover) {
+            rover.move_forward();
+        }
+    }
+
+    impl RoverCommand for TurnLeft {
+        fn execute(&self, rover: &mut Rover) {
+            rover.turn_left();
+        }
+    }
+
+    impl RoverCommand for TurnRight {
+        fn execute(&self, rover: &mut Rover) {
+            rover.turn_right();
+        }
+    }
+
+    impl RoverCommand for DoNothing {
+        fn execute(&self, _: &mut Rover) {}
+    }
+
+    struct Commands {
+        commands: Vec<Box<dyn RoverCommand>>,
+    }
+
+    impl Commands {
+        fn new() -> Self {
+            Self { commands: vec![] }
+        }
+
+        fn add(&mut self, cmd: Box<dyn RoverCommand>) {
+            self.commands.push(cmd);
+        }
+
+        fn execute(&self, rover: &mut Rover) {
+            self.commands.iter().for_each(|c| c.execute(rover));
+        }
+
+        fn create(input: &char) -> Box<dyn RoverCommand> {
             match input {
-                'L' => Command::Left,
-                'R' => Command::Right,
-                'M' => Command::Move,
-                _ => Command::Null,
+                'M' => Box::new(MoveForward),
+                'L' => Box::new(TurnLeft),
+                'R' => Box::new(TurnRight),
+                _ => Box::new(DoNothing),
             }
         }
     }
-    pub struct Coordinate {
+
+    struct Coordinate {
         x: u8,
         y: u8,
     }
@@ -1112,7 +1156,7 @@ pub mod mars_rover_2 {
         }
     }
 
-    pub struct Position {
+    struct Position {
         coordinate: Coordinate,
         direction: Box<dyn Direction>,
     }
@@ -1151,12 +1195,12 @@ pub mod mars_rover_2 {
             Parser {}
         }
 
-        pub fn parse(&self, instructions: String) -> (Vec<Command>, Position) {
+        fn parse(&self, instructions: String) -> (Commands, Position) {
             let lines: Vec<&str> = instructions.lines().collect();
             let position = self.parse_position(lines[1]);
 
             if lines.len() < 3 {
-                return (Vec::new(), position);
+                return (Commands::new(), position);
             }
 
             let commands = self.parse_commands(lines[2]);
@@ -1173,9 +1217,16 @@ pub mod mars_rover_2 {
             return Position::new(Coordinate::new(x, y), DirectionFactory::create(direction));
         }
 
-        fn parse_commands(&self, commands: &str) -> Vec<Command> {
-            let commands: Vec<char> = commands.chars().collect();
-            return commands.iter().map(|c| Command::from(c)).collect();
+        fn parse_commands(&self, commands: &str) -> Commands {
+            let raw_commands: Vec<char> = commands.chars().collect();
+            let mut commands = Commands::new();
+
+            raw_commands
+                .iter()
+                .map(|c| Commands::create(c))
+                .for_each(|c| commands.add(c));
+
+            return commands;
         }
     }
 
@@ -1196,20 +1247,9 @@ pub mod mars_rover_2 {
             let (commands, starting_position) = self.parser.parse(instructions);
             self.update_position(starting_position);
 
-            for c in commands {
-                match c {
-                    Command::Left => self.turn_left(),
-                    Command::Right => self.turn_right(),
-                    Command::Move => self.move_rover(),
-                    _ => {}
-                }
-            }
+            commands.execute(self);
 
             return self.print_final_position();
-        }
-
-        fn update_position(&mut self, position: Position) {
-            self.position = position;
         }
 
         fn turn_left(&mut self) {
@@ -1220,7 +1260,11 @@ pub mod mars_rover_2 {
             self.position.turn_right();
         }
 
-        fn move_rover(&mut self) {
+        fn update_position(&mut self, position: Position) {
+            self.position = position;
+        }
+
+        fn move_forward(&mut self) {
             self.position.move_forward();
         }
 
