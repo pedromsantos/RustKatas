@@ -1,4 +1,4 @@
-const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: [(u16, &'static str); 13] = [
+const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: [(u16, &str); 13] = [
     (1000, "M"),
     (900, "CM"),
     (500, "D"),
