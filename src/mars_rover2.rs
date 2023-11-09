@@ -4,7 +4,7 @@ struct DirectionMoveVector(i8, i8);
 
 trait Direction {
     fn turn_left(&self) -> Box<dyn Direction>;
-    fn turn_rigth(&self) -> Box<dyn Direction>;
+    fn turn_right(&self) -> Box<dyn Direction>;
     fn move_vector(&self) -> DirectionMoveVector;
     fn to_string(&self) -> String;
 }
@@ -18,16 +18,16 @@ impl Direction for North {
     fn turn_left(&self) -> Box<dyn Direction> {
         Box::new(West)
     }
-    fn turn_rigth(&self) -> Box<dyn Direction> {
+    fn turn_right(&self) -> Box<dyn Direction> {
         Box::new(East)
-    }
-
-    fn to_string(&self) -> String {
-        return String::from("N");
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
         return DirectionMoveVector(0, 1);
+    }
+
+    fn to_string(&self) -> String {
+        return String::from("N");
     }
 }
 
@@ -35,16 +35,16 @@ impl Direction for South {
     fn turn_left(&self) -> Box<dyn Direction> {
         Box::new(East)
     }
-    fn turn_rigth(&self) -> Box<dyn Direction> {
+    fn turn_right(&self) -> Box<dyn Direction> {
         Box::new(West)
-    }
-
-    fn to_string(&self) -> String {
-        return String::from("S");
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
         return DirectionMoveVector(0, -1);
+    }
+
+    fn to_string(&self) -> String {
+        return String::from("S");
     }
 }
 
@@ -53,16 +53,16 @@ impl Direction for East {
         Box::new(North)
     }
 
-    fn turn_rigth(&self) -> Box<dyn Direction> {
+    fn turn_right(&self) -> Box<dyn Direction> {
         Box::new(South)
-    }
-
-    fn to_string(&self) -> String {
-        return String::from("E");
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
         return DirectionMoveVector(1, 0);
+    }
+
+    fn to_string(&self) -> String {
+        return String::from("E");
     }
 }
 
@@ -70,16 +70,16 @@ impl Direction for West {
     fn turn_left(&self) -> Box<dyn Direction> {
         Box::new(South)
     }
-    fn turn_rigth(&self) -> Box<dyn Direction> {
+    fn turn_right(&self) -> Box<dyn Direction> {
         Box::new(North)
-    }
-
-    fn to_string(&self) -> String {
-        return String::from("W");
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
         return DirectionMoveVector(-1, 0);
+    }
+
+    fn to_string(&self) -> String {
+        return String::from("W");
     }
 }
 
@@ -188,8 +188,8 @@ struct Position {
 impl Position {
     pub fn new(coordinate: Coordinate, direction: Box<dyn Direction>) -> Self {
         Self {
-            coordinate: coordinate,
-            direction: direction,
+            coordinate,
+            direction,
         }
     }
 
@@ -198,7 +198,7 @@ impl Position {
     }
 
     pub fn turn_right(&mut self) {
-        self.direction = self.direction.turn_rigth();
+        self.direction = self.direction.turn_right();
     }
 
     pub fn move_forward(&mut self) {
@@ -262,7 +262,7 @@ impl Rover {
     pub fn new(parser: Parser) -> Self {
         Rover {
             position: Position::new(Coordinate::new(0, 0), Box::new(North)),
-            parser: parser,
+            parser,
         }
     }
 
@@ -448,7 +448,7 @@ mod mars_rover_2_acceptance_tests {
     }
 
     #[test]
-    fn turn_rigth_and_move() {
+    fn turn_right_and_move() {
         let mut rover = Rover::new(Parser::new());
 
         let position = rover.execute(String::from("5 5\n3 3 E\nMMRMMRMRRM"));

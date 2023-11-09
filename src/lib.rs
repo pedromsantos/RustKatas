@@ -1,4 +1,4 @@
-pub mod fibonacci_sequence;
+pub mod fibonacci;
 pub mod fizz_buzz;
 pub mod leap_year;
 pub mod mars_rover;

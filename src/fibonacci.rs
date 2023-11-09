@@ -8,7 +8,7 @@ pub fn fibonacci(index: u16) -> u16 {
 
 #[cfg(test)]
 mod fibonacci_tests {
-    use crate::fibonacci_sequence::*;
+    use crate::fibonacci::*;
     use pretty_assertions::assert_eq;
     use test_case::test_case;
 
