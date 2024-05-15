@@ -45,18 +45,6 @@ mod fizz_buzzer_tests {
         assert_eq!("fizzbuzz", fizz_buzzer(number));
     }
 
-    prop_compose! {
-            fn multiples_of_fifteen(max: u8)(base in 0..max/5) -> u8 { base * 15 }
-    }
-
-    prop_compose! {
-            fn multiples_of_five(max: u8)(base in 0..max) -> u8 { base * 5 }
-    }
-
-    prop_compose! {
-            fn multiples_of_three(max: u8)(base in 0..max) -> u8 { base * 3 }
-    }
-
     proptest! {
             #[test]
             fn multiples_of_three_start_with_fizz(number in multiples_of_three(50)) {
@@ -85,5 +73,17 @@ mod fizz_buzzer_tests {
 
                      assert_eq!(format!("{}", number), fizz_buzzer(number))
             }
+    }
+
+    prop_compose! {
+            fn multiples_of_three(max: u8)(base in 0..max) -> u8 { base * 3 }
+    }
+
+    prop_compose! {
+        fn multiples_of_five(max: u8)(base in 0..max) -> u8 { base * 5 }
+    }
+
+    prop_compose! {
+            fn multiples_of_fifteen(max: u8)(base in 0..max/5) -> u8 { base * 15 }
     }
 }
