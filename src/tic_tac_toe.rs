@@ -35,43 +35,43 @@ pub struct Square {
 
 impl Square {
     fn new(row: Row, column: Column) -> Self {
-        return Square { row, column };
+        Square { row, column }
     }
 
     pub fn top_left() -> Square {
-        return Square::new(Row::Top, Column::Left);
+        Square::new(Row::Top, Column::Left)
     }
 
     pub fn top_middle() -> Square {
-        return Square::new(Row::Top, Column::Middle);
+        Square::new(Row::Top, Column::Middle)
     }
 
     pub fn top_rigth() -> Square {
-        return Square::new(Row::Top, Column::Rigth);
+        Square::new(Row::Top, Column::Rigth)
     }
 
     pub fn center_left() -> Square {
-        return Square::new(Row::Center, Column::Left);
+        Square::new(Row::Center, Column::Left)
     }
 
     pub fn center_middle() -> Square {
-        return Square::new(Row::Center, Column::Middle);
+        Square::new(Row::Center, Column::Middle)
     }
 
     pub fn center_rigth() -> Square {
-        return Square::new(Row::Center, Column::Rigth);
+        Square::new(Row::Center, Column::Rigth)
     }
 
     pub fn bottom_left() -> Square {
-        return Square::new(Row::Bottom, Column::Left);
+        Square::new(Row::Bottom, Column::Left)
     }
 
     pub fn bottom_middle() -> Square {
-        return Square::new(Row::Bottom, Column::Middle);
+        Square::new(Row::Bottom, Column::Middle)
     }
 
     pub fn bottom_rigth() -> Square {
-        return Square::new(Row::Bottom, Column::Rigth);
+        Square::new(Row::Bottom, Column::Rigth)
     }
 }
 
@@ -103,8 +103,8 @@ impl Board {
         player: Player,
         square: Square,
     ) -> bool {
-        return self.is_same_player_in_all_squares_in_row(&player, square.row)
-            || self.is_same_player_in_all_squares_in_column(&player, square.column);
+        self.is_same_player_in_all_squares_in_row(&player, square.row)
+            || self.is_same_player_in_all_squares_in_column(&player, square.column)
     }
 
     fn is_same_player_in_all_squares_in_row(&self, player: &Player, row: Row) -> bool {

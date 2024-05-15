@@ -2,10 +2,10 @@ use std::fmt;
 use std::str::FromStr;
 
 enum Direction {
-    NORTH,
-    WEST,
-    SOUTH,
-    EAST,
+    North,
+    West,
+    South,
+    East,
 }
 
 impl FromStr for Direction {
@@ -13,10 +13,10 @@ impl FromStr for Direction {
 
     fn from_str(input: &str) -> Result<Direction, Self::Err> {
         match input {
-            "N" => Ok(Direction::NORTH),
-            "W" => Ok(Direction::WEST),
-            "S" => Ok(Direction::SOUTH),
-            "E" => Ok(Direction::EAST),
+            "N" => Ok(Direction::North),
+            "W" => Ok(Direction::West),
+            "S" => Ok(Direction::South),
+            "E" => Ok(Direction::East),
             _ => Err(()),
         }
     }
@@ -25,10 +25,10 @@ impl FromStr for Direction {
 impl fmt::Display for Direction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Direction::NORTH => write!(f, "N"),
-            Direction::SOUTH => write!(f, "S"),
-            Direction::WEST => write!(f, "W"),
-            Direction::EAST => write!(f, "E"),
+            Direction::North => write!(f, "N"),
+            Direction::South => write!(f, "S"),
+            Direction::West => write!(f, "W"),
+            Direction::East => write!(f, "E"),
         }
     }
 }
@@ -92,35 +92,35 @@ pub struct Position {
 impl Position {
     fn new(coordinate: Coordinate, direction: Direction) -> Self {
         Self {
-            coordinate: coordinate,
-            direction: direction,
+            coordinate,
+            direction,
         }
     }
 
     fn turn_left(&mut self) {
         match self.direction {
-            Direction::NORTH => self.change_direction(Direction::WEST),
-            Direction::WEST => self.change_direction(Direction::SOUTH),
-            Direction::SOUTH => self.change_direction(Direction::EAST),
-            Direction::EAST => self.change_direction(Direction::NORTH),
+            Direction::North => self.change_direction(Direction::West),
+            Direction::West => self.change_direction(Direction::South),
+            Direction::South => self.change_direction(Direction::East),
+            Direction::East => self.change_direction(Direction::North),
         }
     }
 
     fn turn_right(&mut self) {
         match self.direction {
-            Direction::NORTH => self.change_direction(Direction::EAST),
-            Direction::WEST => self.change_direction(Direction::NORTH),
-            Direction::SOUTH => self.change_direction(Direction::WEST),
-            Direction::EAST => self.change_direction(Direction::SOUTH),
+            Direction::North => self.change_direction(Direction::East),
+            Direction::West => self.change_direction(Direction::North),
+            Direction::South => self.change_direction(Direction::West),
+            Direction::East => self.change_direction(Direction::South),
         }
     }
 
     fn move_position(&mut self) {
         match self.direction {
-            Direction::NORTH => self.move_north(),
-            Direction::WEST => self.move_west(),
-            Direction::SOUTH => self.move_south(),
-            Direction::EAST => self.move_east(),
+            Direction::North => self.move_north(),
+            Direction::West => self.move_west(),
+            Direction::South => self.move_south(),
+            Direction::East => self.move_east(),
         }
     }
 
@@ -153,6 +153,12 @@ impl fmt::Display for Position {
 
 pub struct Parser {}
 
+impl Default for Parser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Parser {
     pub fn new() -> Self {
         Parser {}
@@ -168,7 +174,7 @@ impl Parser {
 
         let commands = self.parse_commands(lines[2]);
 
-        return (position, commands);
+        (position, commands)
     }
 
     fn parse_position(&self, position: &str) -> Position {
@@ -177,15 +183,15 @@ impl Parser {
         let y: u8 = position_parts[1].parse().unwrap_or(0);
         let direction = position_parts[2];
 
-        return Position::new(
+        Position::new(
             Coordinate::new(x, y),
-            Direction::from_str(direction).unwrap_or(Direction::NORTH),
-        );
+            Direction::from_str(direction).unwrap_or(Direction::North),
+        )
     }
 
     fn parse_commands(&self, commands: &str) -> Vec<Command> {
         let commands: Vec<char> = commands.chars().collect();
-        return commands.iter().map(|c| Command::from(c)).collect();
+        return commands.iter().map(Command::from).collect();
     }
 }
 
@@ -197,8 +203,8 @@ pub struct Rover {
 impl Rover {
     pub fn new(parser: Parser) -> Self {
         Rover {
-            position: Position::new(Coordinate::new(0, 0), Direction::NORTH),
-            parser: parser,
+            position: Position::new(Coordinate::new(0, 0), Direction::North),
+            parser,
         }
     }
 
@@ -215,7 +221,7 @@ impl Rover {
             }
         }
 
-        return format!("{}", self.position);
+        format!("{}", self.position)
     }
 
     fn update_position(&mut self, position: Position) {

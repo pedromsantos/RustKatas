@@ -23,11 +23,11 @@ impl Direction for North {
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
-        return DirectionMoveVector(0, 1);
+        DirectionMoveVector(0, 1)
     }
 
     fn to_string(&self) -> String {
-        return String::from("N");
+        String::from("N")
     }
 }
 
@@ -40,11 +40,11 @@ impl Direction for South {
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
-        return DirectionMoveVector(0, -1);
+        DirectionMoveVector(0, -1)
     }
 
     fn to_string(&self) -> String {
-        return String::from("S");
+        String::from("S")
     }
 }
 
@@ -58,11 +58,11 @@ impl Direction for East {
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
-        return DirectionMoveVector(1, 0);
+        DirectionMoveVector(1, 0)
     }
 
     fn to_string(&self) -> String {
-        return String::from("E");
+        String::from("E")
     }
 }
 
@@ -75,11 +75,11 @@ impl Direction for West {
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
-        return DirectionMoveVector(-1, 0);
+        DirectionMoveVector(-1, 0)
     }
 
     fn to_string(&self) -> String {
-        return String::from("W");
+        String::from("W")
     }
 }
 
@@ -214,6 +214,12 @@ impl fmt::Display for Position {
 
 pub struct Parser {}
 
+impl Default for Parser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Parser {
     pub fn new() -> Self {
         Parser {}
@@ -229,7 +235,7 @@ impl Parser {
 
         let commands = self.parse_commands(lines[2]);
 
-        return (commands, position);
+        (commands, position)
     }
 
     fn parse_position(&self, position: &str) -> Position {
@@ -238,7 +244,7 @@ impl Parser {
         let y: u8 = position_parts[1].parse().unwrap_or(0);
         let direction = position_parts[2];
 
-        return Position::new(Coordinate::new(x, y), DirectionFactory::create(direction));
+        Position::new(Coordinate::new(x, y), DirectionFactory::create(direction))
     }
 
     fn parse_commands(&self, commands: &str) -> Commands {
@@ -249,7 +255,7 @@ impl Parser {
             .iter()
             .for_each(|c| commands.add(Commands::create_command(c)));
 
-        return commands;
+        commands
     }
 }
 
@@ -272,7 +278,7 @@ impl Rover {
 
         commands.execute(self);
 
-        return format!("{}", self.position);
+        format!("{}", self.position)
     }
 
     fn update_position(&mut self, position: Position) {
