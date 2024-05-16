@@ -33,7 +33,7 @@ impl fmt::Display for Direction {
     }
 }
 
-pub enum Command {
+enum Command {
     Left,
     Right,
     Move,
@@ -84,7 +84,7 @@ impl Coordinate {
     }
 }
 
-pub struct Position {
+struct Position {
     coordinate: Coordinate,
     direction: Direction,
 }
@@ -164,7 +164,7 @@ impl Parser {
         Parser {}
     }
 
-    pub fn parse(&self, instructions: String) -> (Position, Vec<Command>) {
+    fn parse(&self, instructions: String) -> (Position, Vec<Command>) {
         let lines: Vec<&str> = instructions.lines().collect();
         let position = self.parse_position(lines[1]);
 
