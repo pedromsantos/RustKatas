@@ -170,11 +170,11 @@ impl fmt::Display for Coordinate {
 }
 
 impl Coordinate {
-    pub fn new(x: u8, y: u8) -> Self {
+    fn new(x: u8, y: u8) -> Self {
         Self { x, y }
     }
 
-    pub fn apply_vector(&mut self, vector: DirectionMoveVector) {
+    fn apply_vector(&mut self, vector: DirectionMoveVector) {
         self.x = (self.x as i8 + vector.0) as u8;
         self.y = (self.y as i8 + vector.1) as u8;
     }
@@ -186,22 +186,22 @@ struct Position {
 }
 
 impl Position {
-    pub fn new(coordinate: Coordinate, direction: Box<dyn Direction>) -> Self {
+    fn new(coordinate: Coordinate, direction: Box<dyn Direction>) -> Self {
         Self {
             coordinate,
             direction,
         }
     }
 
-    pub fn turn_left(&mut self) {
+    fn turn_left(&mut self) {
         self.direction = self.direction.turn_left();
     }
 
-    pub fn turn_right(&mut self) {
+    fn turn_right(&mut self) {
         self.direction = self.direction.turn_right();
     }
 
-    pub fn move_forward(&mut self) {
+    fn move_forward(&mut self) {
         self.coordinate.apply_vector(self.direction.move_vector())
     }
 }
