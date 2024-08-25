@@ -1,4 +1,4 @@
-pub fn fibonacci(index: u16) -> u16 {
+pub fn fibonacci(index: isize) -> isize {
     match index {
         0 => 0,
         1 => 1,
@@ -21,7 +21,10 @@ mod fibonacci_tests {
     #[test_case(6, 8)]
     #[test_case(7, 13)]
     #[test_case(12, 144)]
-    fn fibonacci_number_is_the_sum_of_the_two_preceding_ones(index: u16, fibonacci_number: u16) {
+    fn fibonacci_number_is_the_sum_of_the_two_preceding_ones(
+        index: isize,
+        fibonacci_number: isize,
+    ) {
         assert_eq!(fibonacci_number, fibonacci(index));
     }
 }

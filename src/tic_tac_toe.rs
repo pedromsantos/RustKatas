@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq)]
 pub enum Status {
+    Draw,
     Playing,
     Win(Player),
-    Draw,
 }
 
-#[derive(PartialEq, Clone, Copy, Debug)]
+#[derive(PartialEq, Clone, Copy)]
 pub enum Player {
     X,
     O,
@@ -162,7 +162,6 @@ impl Game {
 #[cfg(test)]
 mod tic_tac_toe_should {
     use crate::tic_tac_toe::*;
-    use pretty_assertions::assert_eq;
 
     #[test]
     fn not_allow_player_o_to_play_first() {
@@ -170,7 +169,7 @@ mod tic_tac_toe_should {
 
         let result = game.play(Player::O, Square::top_left());
 
-        assert_eq!(Err(String::from("Invalid player")), result);
+        assert!(matches!(result, Err(ref e) if e == "Invalid player"));
     }
 
     #[test]
@@ -178,10 +177,11 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert_eq!(Ok(Status::Playing), result);
+        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
 
         result = game.play(Player::X, Square::top_middle());
-        assert_eq!(Err(String::from("Invalid player")), result);
+
+        assert!(matches!(result, Err(ref e) if e == "Invalid player"));
     }
 
     #[test]
@@ -189,10 +189,11 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert_eq!(Ok(Status::Playing), result);
+        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
 
         result = game.play(Player::O, Square::top_left());
-        assert_eq!(Err(String::from("Invalid move")), result);
+
+        assert!(matches!(result, Err(ref e) if e == "Invalid move"));
     }
 
     #[test]
@@ -200,13 +201,14 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert_eq!(Ok(Status::Playing), result);
+        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
 
         result = game.play(Player::O, Square::top_middle());
-        assert_eq!(Ok(Status::Playing), result);
+        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
 
         result = game.play(Player::X, Square::top_left());
-        assert_eq!(Err(String::from("Invalid move")), result);
+
+        assert!(matches!(result, Err(ref e) if e == "Invalid move"));
     }
 
     #[test]
@@ -218,7 +220,8 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::top_middle());
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::top_rigth());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 
     #[test]
@@ -230,7 +233,8 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::center_middle());
         _ = game.play(Player::O, Square::top_middle());
         let result = game.play(Player::X, Square::center_rigth());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 
     #[test]
@@ -242,7 +246,8 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::bottom_middle());
         _ = game.play(Player::O, Square::top_middle());
         let result = game.play(Player::X, Square::bottom_rigth());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 
     #[test]
@@ -254,7 +259,8 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::center_left());
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::bottom_left());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 
     #[test]
@@ -266,7 +272,8 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::center_middle());
         _ = game.play(Player::O, Square::top_rigth());
         let result = game.play(Player::X, Square::bottom_middle());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 
     #[test]
@@ -278,6 +285,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::X, Square::center_rigth());
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::bottom_rigth());
-        assert_eq!(Ok(Status::Win(Player::X)), result);
+
+        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
     }
 }

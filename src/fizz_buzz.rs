@@ -53,7 +53,7 @@ mod fizz_buzzer_tests {
     }
 
     proptest! {
-    #[test]
+            #[test]
             fn multiples_of_five_end_with_buzz(number in multiples_of_five(50)) {
                      assert_eq!(true, fizz_buzzer(number).ends_with("buzz"));
             }
