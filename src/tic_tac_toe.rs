@@ -151,7 +151,7 @@ impl Game {
 
         self.last_player = player;
 
-        return Ok(Status::Playing);
+        Ok(Status::Playing)
     }
 }
 
