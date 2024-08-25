@@ -10,6 +10,7 @@ pub fn fizz_buzzer(number: u8) -> String {
 #[cfg(test)]
 mod fizz_buzzer_tests {
     use crate::fizz_buzz::*;
+    use all_asserts::assert_true;
     use pretty_assertions::assert_eq;
     use proptest::prelude::*;
     use test_case::test_case;
@@ -48,14 +49,14 @@ mod fizz_buzzer_tests {
     proptest! {
             #[test]
             fn multiples_of_three_start_with_fizz(number in multiples_of_three(50)) {
-                    assert_eq!(true, fizz_buzzer(number).starts_with("fizz"));
+                    assert_true!(fizz_buzzer(number).starts_with("fizz"));
             }
     }
 
     proptest! {
             #[test]
             fn multiples_of_five_end_with_buzz(number in multiples_of_five(50)) {
-                     assert_eq!(true, fizz_buzzer(number).ends_with("buzz"));
+                     assert_true!(fizz_buzzer(number).ends_with("buzz"));
             }
     }
 

@@ -9,6 +9,7 @@ pub fn is_leap(year: u16) -> bool {
 #[cfg(test)]
 mod leap_year_tests {
     use crate::leap_year::*;
+    use all_asserts::assert_true;
     use pretty_assertions::assert_eq;
     use test_case::test_case;
 
@@ -30,7 +31,7 @@ mod leap_year_tests {
     #[test_case(2000)]
     #[test_case(2400)]
     fn years_divisible_by_four_hundred_are_leap_years(year: u16) {
-        assert_eq!(true, is_leap(year));
+        assert_true!(is_leap(year));
     }
 
     #[test_case(1804)]
@@ -87,6 +88,6 @@ mod leap_year_tests {
     #[test_case(2016)]
     #[test_case(2020)]
     fn years_divisible_by_four_but_not_by_one_hundred_are_leap_years(year: u16) {
-        assert_eq!(true, is_leap(year));
+        assert_true!(is_leap(year));
     }
 }
