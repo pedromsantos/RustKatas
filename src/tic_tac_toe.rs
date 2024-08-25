@@ -98,11 +98,7 @@ impl Board {
         Ok(())
     }
 
-    pub fn is_same_player_in_all_squares_in_row_or_column(
-        &self,
-        player: Player,
-        square: Square,
-    ) -> bool {
+    pub fn is_same_player_in_square_row_or_column(&self, player: Player, square: Square) -> bool {
         self.is_same_player_in_all_squares_in_row(&player, square.row)
             || self.is_same_player_in_all_squares_in_column(&player, square.column)
     }
@@ -148,67 +144,75 @@ impl Game {
 
         if self
             .board
-            .is_same_player_in_all_squares_in_row_or_column(player, square)
+            .is_same_player_in_square_row_or_column(player, square)
         {
             return Ok(Status::Win(player));
         }
 
         self.last_player = player;
 
-        Ok(Status::Playing)
+        return Ok(Status::Playing);
     }
 }
 
 #[cfg(test)]
 mod tic_tac_toe_should {
-    use crate::tic_tac_toe::*;
+    use super::*;
 
     #[test]
     fn not_allow_player_o_to_play_first() {
         let mut game = Game::default();
 
-        let result = game.play(Player::O, Square::top_left());
-
-        assert!(matches!(result, Err(ref e) if e == "Invalid player"));
+        assert!(matches!(
+            game.play(Player::O, Square::top_left()),
+            Err(ref e) if e == "Invalid player"));
     }
 
     #[test]
     fn not_allow_player_x_to_play_twice() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(Status::Playing)));
+        assert!(matches!(
+            game.play(Player::X, Square::top_left()),
+            Ok(Status::Playing)
+        ));
 
-        result = game.play(Player::X, Square::top_middle());
-
-        assert!(matches!(result, Err(ref e) if e == "Invalid player"));
+        assert!(matches!(
+            game.play(Player::X, Square::top_middle()),
+            Err(ref e) if e == "Invalid player"));
     }
 
     #[test]
     fn not_allow_player_to_play_twice_in_same_position() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(Status::Playing)));
+        assert!(matches!(
+            game.play(Player::X, Square::top_left()),
+            Ok(Status::Playing)
+        ));
 
-        result = game.play(Player::O, Square::top_left());
-
-        assert!(matches!(result, Err(ref e) if e == "Invalid move"));
+        assert!(matches!(
+            game.play(Player::O, Square::top_left()),
+            Err(ref e) if e == "Invalid move"));
     }
 
     #[test]
     fn not_allow_player_to_play_in_same_position_once_taken() {
         let mut game = Game::default();
 
-        let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(Status::Playing)));
+        assert!(matches!(
+            game.play(Player::X, Square::top_left()),
+            Ok(Status::Playing)
+        ));
 
-        result = game.play(Player::O, Square::top_middle());
-        assert!(matches!(result, Ok(Status::Playing)));
+        assert!(matches!(
+            game.play(Player::O, Square::top_middle()),
+            Ok(Status::Playing)
+        ));
 
-        result = game.play(Player::X, Square::top_left());
-
-        assert!(matches!(result, Err(ref e) if e == "Invalid move"));
+        assert!(matches!(
+            game.play(Player::X, Square::top_left()),
+            Err(ref e) if e == "Invalid move"));
     }
 
     #[test]
@@ -219,9 +223,11 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_left());
         _ = game.play(Player::X, Square::top_middle());
         _ = game.play(Player::O, Square::center_middle());
-        let result = game.play(Player::X, Square::top_rigth());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::top_rigth()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 
     #[test]
@@ -232,9 +238,11 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::top_left());
         _ = game.play(Player::X, Square::center_middle());
         _ = game.play(Player::O, Square::top_middle());
-        let result = game.play(Player::X, Square::center_rigth());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::center_rigth()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 
     #[test]
@@ -245,9 +253,11 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::top_left());
         _ = game.play(Player::X, Square::bottom_middle());
         _ = game.play(Player::O, Square::top_middle());
-        let result = game.play(Player::X, Square::bottom_rigth());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::bottom_rigth()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 
     #[test]
@@ -258,9 +268,11 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_rigth());
         _ = game.play(Player::X, Square::center_left());
         _ = game.play(Player::O, Square::center_middle());
-        let result = game.play(Player::X, Square::bottom_left());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::bottom_left()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 
     #[test]
@@ -271,9 +283,11 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_rigth());
         _ = game.play(Player::X, Square::center_middle());
         _ = game.play(Player::O, Square::top_rigth());
-        let result = game.play(Player::X, Square::bottom_middle());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::bottom_middle()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 
     #[test]
@@ -284,8 +298,10 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_left());
         _ = game.play(Player::X, Square::center_rigth());
         _ = game.play(Player::O, Square::center_middle());
-        let result = game.play(Player::X, Square::bottom_rigth());
 
-        assert!(matches!(result, Ok(Status::Win(Player::X))));
+        assert!(matches!(
+            game.play(Player::X, Square::bottom_rigth()),
+            Ok(Status::Win(Player::X))
+        ));
     }
 }

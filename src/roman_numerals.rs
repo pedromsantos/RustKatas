@@ -26,7 +26,7 @@ pub fn to_roman_numeral(number: u16) -> String {
 
 #[cfg(test)]
 mod roman_numerals_tests {
-    use crate::roman_numerals::*;
+    use super::*;
     use pretty_assertions::assert_eq;
     use test_case::test_case;
 

@@ -243,7 +243,7 @@ impl Rover {
 
 #[cfg(test)]
 mod mars_rover_unit_tests {
-    use crate::mars_rover::*;
+    use super::*;
     use pretty_assertions::assert_eq;
 
     #[test]

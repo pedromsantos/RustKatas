@@ -8,7 +8,7 @@ pub fn is_leap(year: u16) -> bool {
 
 #[cfg(test)]
 mod leap_year_tests {
-    use crate::leap_year::*;
+    use super::*;
     use all_asserts::assert_true;
     use pretty_assertions::assert_eq;
     use test_case::test_case;

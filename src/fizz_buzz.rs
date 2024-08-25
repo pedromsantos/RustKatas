@@ -9,7 +9,7 @@ pub fn fizz_buzzer(number: u8) -> String {
 
 #[cfg(test)]
 mod fizz_buzzer_tests {
-    use crate::fizz_buzz::*;
+    use super::*;
     use all_asserts::assert_true;
     use pretty_assertions::assert_eq;
     use proptest::prelude::*;
