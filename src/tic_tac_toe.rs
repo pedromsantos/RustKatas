@@ -177,7 +177,7 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
+        assert!(matches!(result, Ok(Status::Playing)));
 
         result = game.play(Player::X, Square::top_middle());
 
@@ -189,7 +189,7 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
+        assert!(matches!(result, Ok(Status::Playing)));
 
         result = game.play(Player::O, Square::top_left());
 
@@ -201,10 +201,10 @@ mod tic_tac_toe_should {
         let mut game = Game::default();
 
         let mut result = game.play(Player::X, Square::top_left());
-        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
+        assert!(matches!(result, Ok(Status::Playing)));
 
         result = game.play(Player::O, Square::top_middle());
-        assert!(matches!(result, Ok(ref e) if e == &Status::Playing));
+        assert!(matches!(result, Ok(Status::Playing)));
 
         result = game.play(Player::X, Square::top_left());
 
@@ -221,7 +221,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::top_rigth());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 
     #[test]
@@ -234,7 +234,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::top_middle());
         let result = game.play(Player::X, Square::center_rigth());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 
     #[test]
@@ -247,7 +247,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::top_middle());
         let result = game.play(Player::X, Square::bottom_rigth());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 
     #[test]
@@ -260,7 +260,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::bottom_left());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 
     #[test]
@@ -273,7 +273,7 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::top_rigth());
         let result = game.play(Player::X, Square::bottom_middle());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 
     #[test]
@@ -286,6 +286,6 @@ mod tic_tac_toe_should {
         _ = game.play(Player::O, Square::center_middle());
         let result = game.play(Player::X, Square::bottom_rigth());
 
-        assert!(matches!(result, Ok(ref e) if e == &Status::Win(Player::X)));
+        assert!(matches!(result, Ok(Status::Win(Player::X))));
     }
 }
