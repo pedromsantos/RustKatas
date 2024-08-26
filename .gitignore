@@ -11,3 +11,5 @@ Cargo.lock
 .DS_Store
 /.vscode/*
 mutants.out
+lcov.info
+tarpaulin-report.html

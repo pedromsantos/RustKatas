@@ -10,19 +10,43 @@ Katas in Rust language
 cargo build
 ```
 
+#### Lint
+
+```bash
+cargo clippy
+```
+
+#### Format
+
+```bash
+cargo fmt
+```
+
+### Test
+
 ```bash
 cargo test
 ```
 
-### Mutation test
+#### Coverage
 
-#### Install mutation test framework
+```bash
+cargo tarpaulin --out Lcov
+cargo tarpaulin --out Html
+```
+
+### Watch mode
+
+```bash
+cargo install cargo-watch
+cargo watch -x check -x test -x run
+```
+
+### Mutation test
 
 ```bash
 cargo install --locked cargo-mutants
 ```
-
-#### Run mutation tests
 
 ```bash
 cargo mutants

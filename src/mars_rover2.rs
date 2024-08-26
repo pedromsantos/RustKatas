@@ -214,12 +214,6 @@ impl fmt::Display for Position {
 
 pub struct Parser {}
 
-impl Default for Parser {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl Parser {
     pub fn new() -> Self {
         Parser {}
