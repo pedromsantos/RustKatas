@@ -1,27 +1,20 @@
-const ARABIC_NUMBERS_TO_ROMAN_NUMERALS: [(u16, &str); 13] = [
-    (1000, "M"),
-    (900, "CM"),
-    (500, "D"),
-    (400, "CD"),
-    (100, "C"),
-    (90, "XC"),
-    (50, "L"),
-    (40, "XL"),
-    (10, "X"),
-    (9, "IX"),
-    (5, "V"),
-    (4, "IV"),
-    (1, "I"),
-];
-
 pub fn to_roman_numeral(number: u16) -> String {
-    for (arabic_number, roman_numeral) in ARABIC_NUMBERS_TO_ROMAN_NUMERALS.iter() {
-        if number >= *arabic_number {
-            return (*roman_numeral).to_string() + &to_roman_numeral(number - arabic_number);
-        }
+    match number {
+        1000.. => "M".to_string() + &to_roman_numeral(number - 1000),
+        900.. => "CM".to_string() + &to_roman_numeral(number - 900),
+        500.. => "D".to_string() + &to_roman_numeral(number - 500),
+        400.. => "CD".to_string() + &to_roman_numeral(number - 400),
+        100.. => "C".to_string() + &to_roman_numeral(number - 100),
+        90.. => "XC".to_string() + &to_roman_numeral(number - 90),
+        50.. => "L".to_string() + &to_roman_numeral(number - 50),
+        40.. => "XL".to_string() + &to_roman_numeral(number - 40),
+        10.. => "X".to_string() + &to_roman_numeral(number - 10),
+        9.. => "IX".to_string() + &to_roman_numeral(number - 9),
+        5.. => "V".to_string() + &to_roman_numeral(number - 5),
+        4.. => "IV".to_string() + &to_roman_numeral(number - 4),
+        1.. => "I".to_string() + &to_roman_numeral(number - 1),
+        _ => "".to_string(),
     }
-
-    "".to_string()
 }
 
 #[cfg(test)]
