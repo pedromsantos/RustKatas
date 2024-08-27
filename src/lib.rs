@@ -1,3 +1,4 @@
+pub mod anagram;
 pub mod fibonacci;
 pub mod fizz_buzz;
 pub mod leap_year;
