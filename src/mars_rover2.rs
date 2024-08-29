@@ -3,8 +3,8 @@ use std::fmt;
 struct DirectionMoveVector(i8, i8);
 
 trait Direction {
-    fn turn_left(&self) -> Box<dyn Direction>;
-    fn turn_right(&self) -> Box<dyn Direction>;
+    fn turn_left(&self) -> Directions;
+    fn turn_right(&self) -> Directions;
     fn move_vector(&self) -> DirectionMoveVector;
     fn to_string(&self) -> String;
 }
@@ -14,12 +14,57 @@ struct South;
 struct West;
 struct East;
 
-impl Direction for North {
-    fn turn_left(&self) -> Box<dyn Direction> {
-        Box::new(West)
+enum Directions {
+    North(North),
+    South(South),
+    West(West),
+    East(East),
+}
+
+impl Direction for Directions {
+    fn turn_left(&self) -> Directions {
+        match self {
+            Directions::North(direction) => direction.turn_left(),
+            Directions::South(direction) => direction.turn_left(),
+            Directions::West(direction) => direction.turn_left(),
+            Directions::East(direction) => direction.turn_left(),
+        }
     }
-    fn turn_right(&self) -> Box<dyn Direction> {
-        Box::new(East)
+
+    fn turn_right(&self) -> Directions {
+        match self {
+            Directions::North(direction) => direction.turn_right(),
+            Directions::South(direction) => direction.turn_right(),
+            Directions::West(direction) => direction.turn_right(),
+            Directions::East(direction) => direction.turn_right(),
+        }
+    }
+
+    fn move_vector(&self) -> DirectionMoveVector {
+        match self {
+            Directions::North(direction) => direction.move_vector(),
+            Directions::South(direction) => direction.move_vector(),
+            Directions::West(direction) => direction.move_vector(),
+            Directions::East(direction) => direction.move_vector(),
+        }
+    }
+
+    fn to_string(&self) -> String {
+        match self {
+            Directions::North(direction) => direction.to_string(),
+            Directions::South(direction) => direction.to_string(),
+            Directions::West(direction) => direction.to_string(),
+            Directions::East(direction) => direction.to_string(),
+        }
+    }
+}
+
+impl Direction for North {
+    fn turn_left(&self) -> Directions {
+        Directions::West(West)
+    }
+    fn turn_right(&self) -> Directions {
+        Directions::East(East)
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
@@ -32,11 +77,11 @@ impl Direction for North {
 }
 
 impl Direction for South {
-    fn turn_left(&self) -> Box<dyn Direction> {
-        Box::new(East)
+    fn turn_left(&self) -> Directions {
+        Directions::East(East)
     }
-    fn turn_right(&self) -> Box<dyn Direction> {
-        Box::new(West)
+    fn turn_right(&self) -> Directions {
+        Directions::West(West)
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
@@ -49,12 +94,12 @@ impl Direction for South {
 }
 
 impl Direction for East {
-    fn turn_left(&self) -> Box<dyn Direction> {
-        Box::new(North)
+    fn turn_left(&self) -> Directions {
+        Directions::North(North)
     }
 
-    fn turn_right(&self) -> Box<dyn Direction> {
-        Box::new(South)
+    fn turn_right(&self) -> Directions {
+        Directions::South(South)
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
@@ -67,11 +112,11 @@ impl Direction for East {
 }
 
 impl Direction for West {
-    fn turn_left(&self) -> Box<dyn Direction> {
-        Box::new(South)
+    fn turn_left(&self) -> Directions {
+        Directions::South(South)
     }
-    fn turn_right(&self) -> Box<dyn Direction> {
-        Box::new(North)
+    fn turn_right(&self) -> Directions {
+        Directions::North(North)
     }
 
     fn move_vector(&self) -> DirectionMoveVector {
@@ -86,13 +131,13 @@ impl Direction for West {
 struct DirectionFactory;
 
 impl DirectionFactory {
-    fn create(input: &str) -> Box<dyn Direction> {
+    fn create(input: &str) -> Directions {
         match input {
-            "N" => Box::new(North),
-            "W" => Box::new(West),
-            "S" => Box::new(South),
-            "E" => Box::new(East),
-            _ => Box::new(North),
+            "N" => Directions::North(North),
+            "W" => Directions::West(West),
+            "S" => Directions::South(South),
+            "E" => Directions::East(East),
+            _ => Directions::North(North),
         }
     }
 }
@@ -131,8 +176,26 @@ impl RoverCommand for DoNothing {
     fn execute(&self, _: &mut Rover) {}
 }
 
+enum RoverCommands {
+    MoveForward(MoveForward),
+    TurnLeft(TurnLeft),
+    TurnRight(TurnRight),
+    DoNothing(DoNothing),
+}
+
+impl RoverCommand for RoverCommands {
+    fn execute(&self, rover: &mut Rover) {
+        match self {
+            RoverCommands::MoveForward(cmd) => cmd.execute(rover),
+            RoverCommands::TurnLeft(cmd) => cmd.execute(rover),
+            RoverCommands::TurnRight(cmd) => cmd.execute(rover),
+            RoverCommands::DoNothing(cmd) => cmd.execute(rover),
+        }
+    }
+}
+
 struct Commands {
-    commands: Vec<Box<dyn RoverCommand>>,
+    commands: Vec<RoverCommands>,
 }
 
 impl Commands {
@@ -140,7 +203,7 @@ impl Commands {
         Self { commands: vec![] }
     }
 
-    fn add(&mut self, cmd: Box<dyn RoverCommand>) {
+    fn add(&mut self, cmd: RoverCommands) {
         self.commands.push(cmd);
     }
 
@@ -148,12 +211,12 @@ impl Commands {
         self.commands.iter().for_each(|c| c.execute(rover));
     }
 
-    fn create_command(input: &char) -> Box<dyn RoverCommand> {
+    fn create_command(input: &char) -> RoverCommands {
         match input {
-            'M' => Box::new(MoveForward),
-            'L' => Box::new(TurnLeft),
-            'R' => Box::new(TurnRight),
-            _ => Box::new(DoNothing),
+            'M' => RoverCommands::MoveForward(MoveForward),
+            'L' => RoverCommands::TurnLeft(TurnLeft),
+            'R' => RoverCommands::TurnRight(TurnRight),
+            _ => RoverCommands::DoNothing(DoNothing),
         }
     }
 }
@@ -182,11 +245,11 @@ impl Coordinate {
 
 struct Position {
     coordinate: Coordinate,
-    direction: Box<dyn Direction>,
+    direction: Directions,
 }
 
 impl Position {
-    fn new(coordinate: Coordinate, direction: Box<dyn Direction>) -> Self {
+    fn new(coordinate: Coordinate, direction: Directions) -> Self {
         Self {
             coordinate,
             direction,
@@ -267,7 +330,7 @@ pub struct Rover {
 impl Rover {
     pub fn new(parser: Parser) -> Self {
         Rover {
-            position: Position::new(Coordinate::new(0, 0), Box::new(North)),
+            position: Position::new(Coordinate::new(0, 0), Directions::North(North)),
             parser,
         }
     }
