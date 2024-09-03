@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-#[derive(PartialEq)]
 pub enum Status {
     Draw,
     Playing,
